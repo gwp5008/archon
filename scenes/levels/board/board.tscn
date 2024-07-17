@@ -1,0 +1,48 @@
+[gd_scene load_steps=12 format=3 uid="uid://bbyy2yjhnm4t2"]
+
+[ext_resource type="Texture2D" uid="uid://te6j6jogoi87" path="res://graphics/levels/board/game_board.PNG" id="1_yqbrr"]
+[ext_resource type="Texture2D" uid="uid://c17bcgs47g8rn" path="res://graphics/levels/board/selector.png" id="2_g7inr"]
+[ext_resource type="Texture2D" uid="uid://j171l5thwuu8" path="res://graphics/levels/board/darkest_piece.png" id="3_q2luy"]
+[ext_resource type="Texture2D" uid="uid://tipmkoqxqu7a" path="res://graphics/levels/board/lightest_piece.png" id="4_q45q1"]
+[ext_resource type="Texture2D" uid="uid://cuvnf32pasn7a" path="res://graphics/levels/board/neutral_piece.png" id="5_aw2gp"]
+[ext_resource type="Script" path="res://scenes/levels/board/TileMap.gd" id="6_xwx2d"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
+texture = ExtResource("2_g7inr")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4shfd"]
+texture = ExtResource("3_q2luy")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b3rsc"]
+texture = ExtResource("4_q45q1")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhfqb"]
+texture = ExtResource("5_aw2gp")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_e1jus"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_ntcpo")
+sources/4 = SubResource("TileSetAtlasSource_4shfd")
+sources/5 = SubResource("TileSetAtlasSource_b3rsc")
+sources/6 = SubResource("TileSetAtlasSource_dhfqb")
+
+[node name="Board" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(512, 447)
+texture = ExtResource("1_yqbrr")
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(513.5, 413)
+tile_set = SubResource("TileSet_e1jus")
+rendering_quadrant_size = 64
+format = 2
+script = ExtResource("6_xwx2d")
