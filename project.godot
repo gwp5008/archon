@@ -13,12 +13,12 @@ config_version=5
 config/name="archon"
 run/main_scene="res://scenes/levels/board/board.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://icon.png"
 
 [display]
 
 window/size/viewport_width=1023
-window/size/viewport_height=894
+window/size/viewport_height=929
 
 [input]
 

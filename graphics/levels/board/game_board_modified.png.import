@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0p7lk75dp6ch"
-path="res://.godot/imported/selector.png-d2e0b3fcc8adbed964cd24abb7927a38.ctex"
+uid="uid://bqtjosngellvx"
+path="res://.godot/imported/game_board_modified.png-7c8bf715e413a52c06563eaa0e3ec4fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/levels/board/selector.png"
-dest_files=["res://.godot/imported/selector.png-d2e0b3fcc8adbed964cd24abb7927a38.ctex"]
+source_file="res://graphics/levels/board/game_board_modified.png"
+dest_files=["res://.godot/imported/game_board_modified.png-7c8bf715e413a52c06563eaa0e3ec4fa.ctex"]
 
 [params]
 
