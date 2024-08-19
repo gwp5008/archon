@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bldn63kw7c4dd"]
+[gd_scene load_steps=14 format=3 uid="uid://bldn63kw7c4dd"]
 
 [ext_resource type="Script" path="res://scenes/archer_movement.gd" id="1_xsv8n"]
 [ext_resource type="Texture2D" uid="uid://c5v8f45s36e8a" path="res://graphics/characters/archer/transparent/transparent_archer_redo.png" id="2_vshmp"]
@@ -259,6 +259,10 @@ _data = {
 "walk_upright": SubResource("Animation_8mfqt")
 }
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uhs8g"]
+radius = 21.0
+height = 78.0
+
 [node name="Archer" type="CharacterBody2D"]
 script = ExtResource("1_xsv8n")
 
@@ -273,4 +277,7 @@ texture = ExtResource("2_vshmp")
 flip_h = true
 hframes = 5
 vframes = 2
-frame = 3
+frame = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_uhs8g")

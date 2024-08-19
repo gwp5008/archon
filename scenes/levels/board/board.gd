@@ -1,8 +1,12 @@
-extends TileMap
+extends Node2D
 
 var GRID_DIM = 9
 var OFFSET_VALUE = 3
 var colorTurn = "light"
+var touchingGameTile = false
+var tile = Vector2i(0, 0)
+@onready var tileMap = $TileMap
+@onready var archer = $Archer
 
 var SQUARES = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "attribute" : "fly", "square" : "dark", "movement_units" : 3}, 
@@ -89,22 +93,34 @@ var SQUARES = [
 	]
 			
 func _process(_delta):
-	var tile = local_to_map(get_global_mouse_position())
+	tile = tileMap.local_to_map(get_global_mouse_position())
+	touchingGameTile = false
 	#print("tile = %s" % (tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
 	
 	for x in (GRID_DIM + OFFSET_VALUE):
 		for y in (GRID_DIM + OFFSET_VALUE):
 			if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
 				if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
-					erase_cell(0, Vector2(x, y))
+					tileMap.erase_cell(0, Vector2(x, y))
 
 	if tile.x >= OFFSET_VALUE && tile.x < (GRID_DIM + OFFSET_VALUE):
 		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
-			set_cell(0, tile, 0, Vector2i(0, 0), 0)
-			var coords = tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)
-			print(SQUARES[coords.y + (coords.x * GRID_DIM)])
-			#print(tile)
+			tileMap.set_cell(0, tile, 0, Vector2i(0, 0), 0)
+			touchingGameTile = true
+			#var coords = tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)
+			#print(SQUARES[coords.y + (coords.x * GRID_DIM)])
+			
+	
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if touchingGameTile == true:
+				for square in SQUARES:
+					if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
+						if (square.get("piece") == "archer"):
+							print("grandma")
+				
 		
 func movePiece():
-	set_cell(0, Vector2i(1, 0) + Vector2i(OFFSET_VALUE, OFFSET_VALUE), 2, Vector2i(0, 0), 0)
-	set_cell(0, Vector2i(1, 8) + Vector2i(OFFSET_VALUE, OFFSET_VALUE), 2, Vector2i(0, 0), 0)
+	tileMap.set_cell(0, Vector2i(1, 0) + Vector2i(OFFSET_VALUE, OFFSET_VALUE), 2, Vector2i(0, 0), 0)
+	tileMap.set_cell(0, Vector2i(1, 8) + Vector2i(OFFSET_VALUE, OFFSET_VALUE), 2, Vector2i(0, 0), 0)
