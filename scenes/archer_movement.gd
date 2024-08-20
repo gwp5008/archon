@@ -5,7 +5,7 @@ extends CharacterBody2D
 func _physics_process(_delta):
 	velocity.x = Input.get_action_strength("walk_right") - Input.get_action_strength("walk_left")
 	velocity.y = Input.get_action_strength("walk_down") - Input.get_action_strength("walk_up")
-	velocity = velocity * 300
+	velocity = velocity * 200
 	move_and_slide()
 	updateAnimation()
 	
