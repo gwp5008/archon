@@ -124,11 +124,10 @@ func _input(event):
 							var newPosCoords = topArcher.global_position
 							var vectorPosCoords = tileMap.local_to_map(newPosCoords)
 							topArcher.queue_free()
-							print(vectorPosCoords)
-							#archer.instantiate()
-							#archer.position = tileMap.map_to_local(vectorPosCoords)
-							archer.instantiate().position = newPosCoords
-							#archer_movement.instantiate()
+							#print(vectorPosCoords)
+							var archerInstance = archer.instantiate()
+							archerInstance.position = newPosCoords
+							print(tileMap.local_to_map(archerInstance.position))
 							
 				
 		
