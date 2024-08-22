@@ -6,10 +6,10 @@ var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
 @onready var tileMap = $TileMap
-#@onready var archer = $Archer
 @onready var archer = preload("res://scenes/archer_movement.tscn")
 @onready var topArcher = $TopArcher
 #@export var archer_movement: PackedScene
+#@onready var archer = $Archer
 
 var SQUARES = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "attribute" : "fly", "square" : "dark", "movement_units" : 3}, 
@@ -122,12 +122,11 @@ func _input(event):
 					if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 						if (square.get("piece") == "archer"):
 							var newPosCoords = topArcher.global_position
-							var vectorPosCoords = tileMap.local_to_map(newPosCoords)
 							topArcher.queue_free()
-							#print(vectorPosCoords)
 							var archerInstance = archer.instantiate()
 							archerInstance.position = newPosCoords
-							print(tileMap.local_to_map(archerInstance.position))
+							add_child(archerInstance)
+							print(tileMap.local_to_map(archerInstance.position) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 							
 				
 		
