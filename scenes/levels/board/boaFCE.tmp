@@ -1,0 +1,68 @@
+[gd_scene load_steps=13 format=3 uid="uid://bbyy2yjhnm4t2"]
+
+[ext_resource type="Texture2D" uid="uid://bqtjosngellvx" path="res://graphics/levels/board/game_board_modified.png" id="1_bj2u2"]
+[ext_resource type="Script" path="res://scenes/levels/board/board.gd" id="1_xb6gq"]
+[ext_resource type="Texture2D" uid="uid://b0p7lk75dp6ch" path="res://graphics/levels/board/selector.png" id="2_g7inr"]
+[ext_resource type="Texture2D" uid="uid://j171l5thwuu8" path="res://graphics/levels/board/darkest_piece.png" id="3_q2luy"]
+[ext_resource type="Texture2D" uid="uid://tipmkoqxqu7a" path="res://graphics/levels/board/lightest_piece.png" id="4_q45q1"]
+[ext_resource type="Texture2D" uid="uid://cuvnf32pasn7a" path="res://graphics/levels/board/neutral_piece.png" id="5_aw2gp"]
+[ext_resource type="Texture2D" uid="uid://df0d7f53dkdsa" path="res://graphics/characters/archer/transparent/board_sprite.PNG" id="7_5tb8l"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
+texture = ExtResource("2_g7inr")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4shfd"]
+texture = ExtResource("3_q2luy")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b3rsc"]
+texture = ExtResource("4_q45q1")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhfqb"]
+texture = ExtResource("5_aw2gp")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSet" id="TileSet_e1jus"]
+tile_size = Vector2i(64, 64)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_ntcpo")
+sources/4 = SubResource("TileSetAtlasSource_4shfd")
+sources/5 = SubResource("TileSetAtlasSource_b3rsc")
+sources/6 = SubResource("TileSetAtlasSource_dhfqb")
+
+[node name="Board" type="Node2D"]
+script = ExtResource("1_xb6gq")
+
+[node name="BoardSprite" type="Sprite2D" parent="."]
+position = Vector2(510.5, 463.5)
+scale = Vector2(1.00049, 1.00054)
+texture = ExtResource("1_bj2u2")
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(191.4, 191.3)
+tile_set = SubResource("TileSet_e1jus")
+rendering_quadrant_size = 64
+collision_animatable = true
+format = 2
+
+[node name="Archer1" type="Sprite2D" parent="."]
+position = Vector2(288, 224)
+texture = ExtResource("7_5tb8l")
+
+[node name="Archer2" type="Sprite2D" parent="."]
+position = Vector2(288, 738)
+texture = ExtResource("7_5tb8l")

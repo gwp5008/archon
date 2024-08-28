@@ -7,9 +7,6 @@ var touchingGameTile = false
 var tile = Vector2i(0, 0)
 @onready var tileMap = $TileMap
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
-#@onready var archer1 = $Archer1
-#@export var archer_movement: PackedScene
-#@onready var archer = $Archer
 
 var SQUARES = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "number" : 1, "attribute" : "fly", "square" : "dark", "movement_units" : 3}, 
@@ -94,6 +91,11 @@ var SQUARES = [
 	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "number" : 2, "attribute" : "ground", "square" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "number" : 2, "attribute" : "fly", "square" : "light", "movement_units" : 3}
 	]
+	
+var frontier = []
+var came_from = {}
+@onready var start_location = tileMap.local_to_map(SQUARES[0].get("coordinates"))	#Position in tilemap (Vector2)
+@onready var end_location = tileMap.local_to_map(SQUARES[SQUARES.size() - 1].get("coordinates"))	#Position in tilemap (Vector2)
 			
 func _process(_delta):
 	tile = tileMap.local_to_map(get_global_mouse_position())
@@ -130,6 +132,7 @@ func movePiece(square):
 	var pieceInstance = neededData.get("scene").instantiate()
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
+	calculateMovableSquares(square)
 	print(tileMap.local_to_map(pieceInstance.position) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 		
 func swapPieceInstances(square):
@@ -143,5 +146,26 @@ func swapPieceInstances(square):
 		archer.queue_free()
 		var data = {"global_position" : archer.global_position, "scene" : archerScene}
 		return data
+		
+func calculateMovableSquares(square):
+	frontier.push_front(start_location)
+	came_from[start_location] = null
+
+	while !frontier.is_empty():
+		var current = frontier.pop_front()
+		for next in get_neighbours(current):
+			print(current)
+			if !came_from.has(next):
+				frontier.push_back(next)
+				came_from[next] = current
+	
+func get_neighbours(node):
+	var neighbors = []
+	neighbors.append(node + Vector2i(-1, 0))
+	neighbors.append(node + Vector2i(0, -1))
+	neighbors.append(node + Vector2i(1, 0))
+	neighbors.append(node + Vector2i(0, 1))
+	return neighbors
+	
 	
 	
