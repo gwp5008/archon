@@ -94,6 +94,7 @@ var SQUARES = [
 	
 var frontier = []
 var came_from = {}
+var movableSquares = {}
 @onready var start_location = tileMap.local_to_map(SQUARES[0].get("coordinates"))	#Position in tilemap (Vector2)
 @onready var end_location = tileMap.local_to_map(SQUARES[SQUARES.size() - 1].get("coordinates"))	#Position in tilemap (Vector2)
 			
@@ -112,10 +113,7 @@ func _process(_delta):
 		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
 			tileMap.set_cell(0, tile, 0, Vector2i(0, 0), 0)
 			touchingGameTile = true
-			#var coords = tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)
-			#print(SQUARES[coords.y + (coords.x * GRID_DIM)])
 			
-	
 func _input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -124,8 +122,6 @@ func _input(event):
 					if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 						movePiece(square)
 							
-				
-		
 func movePiece(square):
 	var neededData = swapPieceInstances(square)
 	var newPosCoords = neededData.get("global_position")
@@ -133,7 +129,7 @@ func movePiece(square):
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
 	calculateMovableSquares(square)
-	print(tileMap.local_to_map(pieceInstance.position) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
+	print(movableSquares)
 		
 func swapPieceInstances(square):
 	var archer = null
@@ -153,13 +149,19 @@ func calculateMovableSquares(square):
 
 	while !frontier.is_empty():
 		var current = frontier.pop_front()
-		for next in get_neighbours(current):
-			print(current)
-			if !came_from.has(next):
-				frontier.push_back(next)
-				came_from[next] = current
-	
-func get_neighbours(node):
+		for next in get_neighbors(current):
+			if absi(current.x) + absi(current.y) <= square.get("movement_units"):
+				var squareToConsider = current + (square.get("coordinates"))
+				if !came_from.has(next):
+					frontier.push_back(next)
+					came_from[next] = current
+				
+				#More code needed here to make sure pieces are not already on the square
+				if squareToConsider.x <= GRID_DIM && squareToConsider.x >= 0:
+					if squareToConsider.y <= GRID_DIM && squareToConsider.y >= 0:
+						movableSquares[squareToConsider] = null	
+				
+func get_neighbors(node):
 	var neighbors = []
 	neighbors.append(node + Vector2i(-1, 0))
 	neighbors.append(node + Vector2i(0, -1))
