@@ -151,7 +151,7 @@ func calculateMovableSquares(square):
 		var current = frontier.pop_front()
 		for next in get_neighbors(current):
 			if absi(current.x) + absi(current.y) <= square.get("movement_units"):
-				var squareToConsider = current + (square.get("coordinates"))
+				var squareToConsider = current + square.get("coordinates")
 				if !came_from.has(next):
 					frontier.push_back(next)
 					came_from[next] = current
