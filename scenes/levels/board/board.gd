@@ -1,7 +1,8 @@
 extends Node2D
 
-var GRID_DIM = 9
-var OFFSET_VALUE = 3
+const GRID_DIM = 9
+const OFFSET_VALUE = 3
+
 var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
@@ -9,7 +10,7 @@ var movableSquares = {}
 @onready var tileMap = $TileMap
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
-var SQUARES = [
+var squares = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "number" : 1, "attribute" : "fly", "square" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "number" : 1, "attribute" : "ground", "square" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "number" : 1, "attribute" : "ground", "square" : "dark", "movement_units" : 4}, 
@@ -113,7 +114,7 @@ func _input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if touchingGameTile == true:
-				for square in SQUARES:
+				for square in squares:
 					if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 						movePiece(square)
 							
@@ -146,8 +147,8 @@ func swapPieceInstances(square):
 func calculateMovableSquares(inSquare):
 	var frontier = []
 	var came_from = {}
-	var start_location = tileMap.local_to_map(SQUARES[0].get("coordinates"))	#Position in tilemap (Vector2)
-	var end_location = tileMap.local_to_map(SQUARES[SQUARES.size() - 1].get("coordinates"))
+	var start_location = tileMap.local_to_map(squares[0].get("coordinates"))	#Position in tilemap (Vector2)
+	var end_location = tileMap.local_to_map(squares[squares.size() - 1].get("coordinates"))
 	
 	frontier.push_front(start_location)
 	came_from[start_location] = null
@@ -165,7 +166,7 @@ func calculateMovableSquares(inSquare):
 					if squareToConsider.y <= GRID_DIM && squareToConsider.y >= 0:
 						movableSquares[squareToConsider] = null	
 						
-		for square in SQUARES:
+		for square in squares:
 			for movableSquare in movableSquares.keys():
 				if square.get("coordinates") == movableSquare && square.get("piece") != null:
 					movableSquares.erase(movableSquare)
