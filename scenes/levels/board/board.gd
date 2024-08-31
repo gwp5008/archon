@@ -121,6 +121,7 @@ func movePiece(square):
 	var neededData = swapPieceInstances(square)
 	var newPosCoords = neededData.get("global_position")
 	var pieceInstance = neededData.get("scene").instantiate()
+	
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
 	calculateMovableSquares(square)
@@ -139,6 +140,7 @@ func swapPieceInstances(square):
 		
 		swappedPiece.queue_free()
 		var data = {"global_position" : swappedPiece.global_position, "scene" : animationScene}
+		
 		return data
 		
 func calculateMovableSquares(inSquare):
@@ -159,7 +161,6 @@ func calculateMovableSquares(inSquare):
 					frontier.push_back(next)
 					came_from[next] = current
 				
-				#More code needed here to make sure pieces are not already on the square
 				if squareToConsider.x <= GRID_DIM && squareToConsider.x >= 0:
 					if squareToConsider.y <= GRID_DIM && squareToConsider.y >= 0:
 						movableSquares[squareToConsider] = null	
@@ -171,10 +172,12 @@ func calculateMovableSquares(inSquare):
 				
 func get_neighbors(node):
 	var neighbors = []
+	
 	neighbors.append(node + Vector2i(-1, 0))
 	neighbors.append(node + Vector2i(0, -1))
 	neighbors.append(node + Vector2i(1, 0))
 	neighbors.append(node + Vector2i(0, 1))
+	
 	return neighbors
 	
 	
