@@ -5,7 +5,6 @@ var OFFSET_VALUE = 3
 var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
-signal childSceneCreated
 @onready var tileMap = $TileMap
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
@@ -129,7 +128,6 @@ func movePiece(square):
 	var pieceInstance = neededData.get("scene").instantiate()
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
-	childSceneCreated.emit(pieceInstance)
 	calculateMovableSquares(square)
 	print(movableSquares)
 		
