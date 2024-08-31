@@ -5,6 +5,7 @@ var OFFSET_VALUE = 3
 var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
+signal childSceneCreated
 @onready var tileMap = $TileMap
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
@@ -128,30 +129,34 @@ func movePiece(square):
 	var pieceInstance = neededData.get("scene").instantiate()
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
+	childSceneCreated.emit(pieceInstance)
 	calculateMovableSquares(square)
 	print(movableSquares)
 		
 func swapPieceInstances(square):
-	var archer = null
+	var swappedPiece = null
+	var animationScene = null
+	
 	if (square.get("piece") == "archer"):
+		animationScene = archerScene
 		if (square.get("number") == 1):
-			archer = $Archer1
+			swappedPiece = $Archer1
 		elif (square.get("number") == 2):
-			archer = $Archer2
+			swappedPiece = $Archer2
 		
-		archer.queue_free()
-		var data = {"global_position" : archer.global_position, "scene" : archerScene}
+		swappedPiece.queue_free()
+		var data = {"global_position" : swappedPiece.global_position, "scene" : animationScene}
 		return data
 		
-func calculateMovableSquares(square):
+func calculateMovableSquares(inSquare):
 	frontier.push_front(start_location)
 	came_from[start_location] = null
 
 	while !frontier.is_empty():
 		var current = frontier.pop_front()
 		for next in get_neighbors(current):
-			if absi(current.x) + absi(current.y) <= square.get("movement_units"):
-				var squareToConsider = current + square.get("coordinates")
+			if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
+				var squareToConsider = current + inSquare.get("coordinates")
 				if !came_from.has(next):
 					frontier.push_back(next)
 					came_from[next] = current
@@ -160,6 +165,11 @@ func calculateMovableSquares(square):
 				if squareToConsider.x <= GRID_DIM && squareToConsider.x >= 0:
 					if squareToConsider.y <= GRID_DIM && squareToConsider.y >= 0:
 						movableSquares[squareToConsider] = null	
+						
+		for square in SQUARES:
+			for movableSquare in movableSquares.keys():
+				if square.get("coordinates") == movableSquare && square.get("piece") != null:
+					movableSquares.erase(movableSquare)
 				
 func get_neighbors(node):
 	var neighbors = []
@@ -168,6 +178,5 @@ func get_neighbors(node):
 	neighbors.append(node + Vector2i(1, 0))
 	neighbors.append(node + Vector2i(0, 1))
 	return neighbors
-	
 	
 	
