@@ -5,6 +5,7 @@ var OFFSET_VALUE = 3
 var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
+var movableSquares = {}
 @onready var tileMap = $TileMap
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
@@ -91,12 +92,6 @@ var SQUARES = [
 	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "number" : 2, "attribute" : "ground", "square" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "number" : 2, "attribute" : "fly", "square" : "light", "movement_units" : 3}
 	]
-	
-var frontier = []
-var came_from = {}
-var movableSquares = {}
-@onready var start_location = tileMap.local_to_map(SQUARES[0].get("coordinates"))	#Position in tilemap (Vector2)
-@onready var end_location = tileMap.local_to_map(SQUARES[SQUARES.size() - 1].get("coordinates"))	#Position in tilemap (Vector2)
 			
 func _process(_delta):
 	tile = tileMap.local_to_map(get_global_mouse_position())
@@ -147,6 +142,11 @@ func swapPieceInstances(square):
 		return data
 		
 func calculateMovableSquares(inSquare):
+	var frontier = []
+	var came_from = {}
+	var start_location = tileMap.local_to_map(SQUARES[0].get("coordinates"))	#Position in tilemap (Vector2)
+	var end_location = tileMap.local_to_map(SQUARES[SQUARES.size() - 1].get("coordinates"))
+	
 	frontier.push_front(start_location)
 	came_from[start_location] = null
 
