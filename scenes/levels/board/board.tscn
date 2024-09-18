@@ -12,29 +12,21 @@
 texture = ExtResource("2_g7inr")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4shfd"]
 texture = ExtResource("3_q2luy")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b3rsc"]
 texture = ExtResource("4_q45q1")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhfqb"]
 texture = ExtResource("5_aw2gp")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSet" id="TileSet_e1jus"]
 tile_size = Vector2i(64, 64)
@@ -52,13 +44,6 @@ position = Vector2(510.5, 463.5)
 scale = Vector2(1.00049, 1.00054)
 texture = ExtResource("1_bj2u2")
 
-[node name="TileMap" type="TileMap" parent="."]
-position = Vector2(191.4, 191.3)
-tile_set = SubResource("TileSet_e1jus")
-rendering_quadrant_size = 64
-collision_animatable = true
-format = 2
-
 [node name="Archer1" type="Sprite2D" parent="."]
 position = Vector2(288, 224)
 texture = ExtResource("7_5tb8l")
@@ -66,3 +51,10 @@ texture = ExtResource("7_5tb8l")
 [node name="Archer2" type="Sprite2D" parent="."]
 position = Vector2(288, 738)
 texture = ExtResource("7_5tb8l")
+
+[node name="Layer0" type="TileMapLayer" parent="."]
+use_parent_material = true
+position = Vector2(191.4, 191.3)
+tile_set = SubResource("TileSet_e1jus")
+rendering_quadrant_size = 64
+use_kinematic_bodies = true

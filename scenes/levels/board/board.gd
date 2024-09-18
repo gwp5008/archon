@@ -7,7 +7,7 @@ var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
 var movableSquares = {}
-@onready var tileMap = $TileMap
+@onready var tileMap = $Layer0
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
 var squares = [
@@ -103,11 +103,13 @@ func _process(_delta):
 		for y in (GRID_DIM + OFFSET_VALUE):
 			if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
 				if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
-					tileMap.erase_cell(0, Vector2(x, y))
+					#tileMap.erase_cell(0, Vector2(x, y))
+					tileMap.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 
 	if tile.x >= OFFSET_VALUE && tile.x < (GRID_DIM + OFFSET_VALUE):
 		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
-			tileMap.set_cell(0, tile, 0, Vector2i(0, 0), 0)
+			#tileMap.set_cell(0, tile, 0, Vector2i(0, 0), 0)
+			tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
 			touchingGameTile = true
 			
 func _input(event):
@@ -148,7 +150,6 @@ func calculateMovableSquares(inSquare):
 	var frontier = []
 	var came_from = {}
 	var start_location = tileMap.local_to_map(squares[0].get("coordinates"))	#Position in tilemap (Vector2)
-	var end_location = tileMap.local_to_map(squares[squares.size() - 1].get("coordinates"))
 	
 	frontier.push_front(start_location)
 	came_from[start_location] = null
