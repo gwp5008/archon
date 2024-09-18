@@ -40,9 +40,16 @@ sources/6 = SubResource("TileSetAtlasSource_dhfqb")
 script = ExtResource("1_xb6gq")
 
 [node name="BoardSprite" type="Sprite2D" parent="."]
-position = Vector2(510.5, 463.5)
+position = Vector2(509.6, 462.5)
 scale = Vector2(1.00049, 1.00054)
 texture = ExtResource("1_bj2u2")
+
+[node name="Layer0" type="TileMapLayer" parent="."]
+use_parent_material = true
+position = Vector2(191.4, 191.3)
+tile_set = SubResource("TileSet_e1jus")
+rendering_quadrant_size = 64
+use_kinematic_bodies = true
 
 [node name="Archer1" type="Sprite2D" parent="."]
 position = Vector2(288, 224)
@@ -51,10 +58,3 @@ texture = ExtResource("7_5tb8l")
 [node name="Archer2" type="Sprite2D" parent="."]
 position = Vector2(288, 738)
 texture = ExtResource("7_5tb8l")
-
-[node name="Layer0" type="TileMapLayer" parent="."]
-use_parent_material = true
-position = Vector2(191.4, 191.3)
-tile_set = SubResource("TileSet_e1jus")
-rendering_quadrant_size = 64
-use_kinematic_bodies = true
