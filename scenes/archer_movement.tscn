@@ -281,3 +281,27 @@ frame = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_uhs8g")
+
+[node name="upcast" type="RayCast2D" parent="."]
+position = Vector2(1, -105)
+
+[node name="downcast" type="RayCast2D" parent="."]
+position = Vector2(-1, 63)
+
+[node name="leftcast" type="RayCast2D" parent="."]
+position = Vector2(-52, -21)
+
+[node name="rightcast" type="RayCast2D" parent="."]
+position = Vector2(57, -16)
+
+[node name="upleftcast" type="RayCast2D" parent="."]
+position = Vector2(169, 64)
+
+[node name="uprightcast" type="RayCast2D" parent="."]
+position = Vector2(216, 64)
+
+[node name="downleftcast" type="RayCast2D" parent="."]
+position = Vector2(198, -79)
+
+[node name="downrightcast" type="RayCast2D" parent="."]
+position = Vector2(155, -80)

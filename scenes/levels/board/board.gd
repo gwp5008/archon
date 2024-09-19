@@ -111,7 +111,7 @@ func _process(_delta):
 			#tileMap.set_cell(0, tile, 0, Vector2i(0, 0), 0)
 			tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
 			touchingGameTile = true
-			
+				
 func _input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -128,7 +128,7 @@ func movePiece(square):
 	pieceInstance.position = newPosCoords
 	add_child(pieceInstance)
 	calculateMovableSquares(square)
-	print(movableSquares)
+	#print(movableSquares)
 		
 func swapPieceInstances(square):
 	var swappedPiece = null
