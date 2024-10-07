@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bbyy2yjhnm4t2"]
+[gd_scene load_steps=13 format=3 uid="uid://bbyy2yjhnm4t2"]
 
 [ext_resource type="Texture2D" uid="uid://bqtjosngellvx" path="res://graphics/levels/board/game_board_modified.png" id="1_bj2u2"]
 [ext_resource type="Script" path="res://scenes/levels/board/board.gd" id="1_xb6gq"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://tipmkoqxqu7a" path="res://graphics/levels/board/lightest_piece.png" id="4_q45q1"]
 [ext_resource type="Texture2D" uid="uid://cuvnf32pasn7a" path="res://graphics/levels/board/neutral_piece.png" id="5_aw2gp"]
 [ext_resource type="Texture2D" uid="uid://df0d7f53dkdsa" path="res://graphics/characters/archer/transparent/board_sprite.PNG" id="7_5tb8l"]
-[ext_resource type="Script" path="res://scenes/levels/board/archer_1_node.gd" id="8_pm226"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
 texture = ExtResource("2_g7inr")
@@ -52,13 +51,10 @@ tile_set = SubResource("TileSet_e1jus")
 rendering_quadrant_size = 64
 use_kinematic_bodies = true
 
-[node name="Archer2" type="Sprite2D" parent="."]
-position = Vector2(287, 736)
+[node name="Archer1" type="Sprite2D" parent="."]
+position = Vector2(288, 224)
 texture = ExtResource("7_5tb8l")
 
-[node name="Archer1Node" type="Node2D" parent="."]
-script = ExtResource("8_pm226")
-
-[node name="Archer1" type="Sprite2D" parent="Archer1Node"]
-position = Vector2(287, 223)
+[node name="Archer2" type="Sprite2D" parent="."]
+position = Vector2(288, 738)
 texture = ExtResource("7_5tb8l")
