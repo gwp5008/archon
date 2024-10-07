@@ -135,7 +135,8 @@ func movePiece():
 	var oldSquareIndex = 0
 	var newSquare = {}
 	var oldSquare = {}
-	var oldColor = ""
+	var prevNewColor = ""
+	var prevOldColor = ""
 	var prevNewCoords = null
 	var prevOldCoords = null
 	
@@ -161,15 +162,15 @@ func movePiece():
 				
 	prevNewCoords = squares[newSquareIndex].get("coordinates")
 	prevOldCoords = squares[oldSquareIndex].get("coordinates")
+	prevNewColor = squares[newSquareIndex].get("square_color")
+	prevOldColor = squares[oldSquareIndex].get("square_color")
 
-	oldColor = squares[newSquareIndex].get("square_color")	#print(oldCoordinates)
+	squares[newSquareIndex]["square_color"] = prevOldColor
 	squares[newSquareIndex] = oldSquare
-	squares[newSquareIndex]["square_color"] = oldColor
 	squares[newSquareIndex]["coordinates"] = prevNewCoords
 
-	oldColor = squares[oldSquareIndex].get("square_color")
+	squares[oldSquareIndex]["square_color"] = prevNewColor
 	squares[oldSquareIndex] = newSquare
-	squares[oldSquareIndex]["square_color"] = oldColor
 	squares[oldSquareIndex]["coordinates"] = prevOldCoords
 	
 	pieceSelectionCount = 0
