@@ -56,16 +56,16 @@ use_kinematic_bodies = true
 [node name="Pieces" type="Node2D" parent="."]
 script = ExtResource("7_nss3o")
 
-[node name="Archer2Node" type="Node2D" parent="."]
-script = ExtResource("8_pm226")
-
-[node name="Archer2" type="Sprite2D" parent="Archer2Node"]
-position = Vector2(287, 736)
-texture = ExtResource("7_5tb8l")
-
 [node name="Archer1Node" type="Node2D" parent="."]
 script = ExtResource("8_pm226")
 
 [node name="Archer1" type="Sprite2D" parent="Archer1Node"]
 position = Vector2(287, 223)
+texture = ExtResource("7_5tb8l")
+
+[node name="Archer2Node" type="Node2D" parent="."]
+script = ExtResource("8_pm226")
+
+[node name="Archer2" type="Sprite2D" parent="Archer2Node"]
+position = Vector2(287, 736)
 texture = ExtResource("7_5tb8l")
