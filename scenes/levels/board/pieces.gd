@@ -1,4 +1,5 @@
 extends Node2D
+class_name Pieces
 
 func move(tileMap, tile, offset, currentPiece, squareSize):
 	var returnSquares = {}

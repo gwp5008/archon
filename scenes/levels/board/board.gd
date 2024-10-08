@@ -13,7 +13,7 @@ var currentPiece = null
 @onready var tileMap = $Layer0
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 @onready var archer1Node = $Archer1Node
-@onready var archer2Sprite = $Archer2
+@onready var archer2Node = $Archer2Node
 
 @onready var squares = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
@@ -33,7 +33,7 @@ var currentPiece = null
 	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "sprite2d" : null, "number" : 5, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "sprite2d" : null, "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "sprite2d" : null, "number" : 7, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "sprite2d" : archer2Sprite, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "sprite2d" : archer2Node, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(2, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
 	{"coordinates" : Vector2i(2, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
 	{"coordinates" : Vector2i(2, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
@@ -144,6 +144,7 @@ func movePiece():
 		if pieceSelectionCount == 1:
 			#var tween = create_tween()
 			#tween.tween_property(currentPiece.get("sprite2d"), "modulate:a", 0, 0)
+			print(currentPiece.get("sprite2d"))
 			var movementSquares = currentPiece.get("sprite2d").move(tileMap, tile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
@@ -211,5 +212,4 @@ func get_neighbors(node):
 	neighbors.append(node + Vector2i(0, 1))
 	
 	return neighbors
-	
 	
