@@ -10,6 +10,8 @@ var tile = Vector2i(0, 0)
 var movableSquares = {}
 var pieceSelectionCount = 0
 var currentPiece = null
+var moveState
+enum Moves {NO_MOVE=0, BAD_MOVE=1, GOOD_MOVE=2}
 @onready var tileMap = $Layer0
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 @onready var archer1Node = $Archer1Node
@@ -112,7 +114,14 @@ func _process(_delta):
 
 	if tile.x >= OFFSET_VALUE && tile.x < (GRID_DIM + OFFSET_VALUE):
 		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
-			tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
+			if pieceSelectionCount == 1:
+				if ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys() || 
+				((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) == currentPiece.get("coordinates"))):
+					tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+				else:
+					tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
+			else: 
+				tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
 			touchingGameTile = true
 				
 func _input(event):
@@ -144,7 +153,6 @@ func movePiece():
 		if pieceSelectionCount == 1:
 			#var tween = create_tween()
 			#tween.tween_property(currentPiece.get("sprite2d"), "modulate:a", 0, 0)
-			print(currentPiece.get("sprite2d"))
 			var movementSquares = currentPiece.get("sprite2d").move(tileMap, tile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
