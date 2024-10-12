@@ -11,94 +11,93 @@ var movableSquares = {}
 var pieceSelectionCount = 0
 var currentPiece = null
 var moveState
-enum Moves {NO_MOVE=0, BAD_MOVE=1, GOOD_MOVE=2}
 @onready var tileMap = $Layer0
 @onready var archerScene = preload("res://scenes/archer_movement.tscn")
 @onready var archer1Node = $Archer1Node
 @onready var archer2Node = $Archer2Node
 
 @onready var squares = [
-	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "sprite2d" : null, "number" : 1, "attribute" : "teleport", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
-	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 7), "piece" : "golem", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 8), "piece" : "valkyrie", "sprite2d" : null, "number" : 2, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 0), "piece" : "archer", "sprite2d" : archer1Node, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "sprite2d" : null, "number" : 3, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "sprite2d" : null, "number" : 4, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "sprite2d" : null, "number" : 5, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "sprite2d" : null, "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "sprite2d" : null, "number" : 7, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "sprite2d" : archer2Node, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(2, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 3), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 4), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 5), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 6), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 7), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 8), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 3), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 4), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 5), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 6), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 7), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 8), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 3), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 4), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 5), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 6), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 7), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 8), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 3), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 4), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 5), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 6), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 7), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 8), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 0), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 1), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 2), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 3), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 4), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 5), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 6), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 7), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 8), "piece" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null},
-	{"coordinates" : Vector2i(7, 0), "piece" : "manticore", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 8), "piece" : "manticore", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3},
-	{"coordinates" : Vector2i(8, 0), "piece" : "banshee", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 1), "piece" : "troll", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 2), "piece" : "basilisk", "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 3), "piece" : "shapeshifter", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
-	{"coordinates" : Vector2i(8, 4), "piece" : "sorceress", "sprite2d" : null, "number" : 1, "attribute" : "teleport", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 5), "piece" : "dragon", "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(8, 6), "piece" : "basilisk", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3},
-	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "sprite2d" : null, "number" : 2, "attribute" : "fly", "square_color" : "light", "movement_units" : 3}
+	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "node2d" : null, "number" : 1, "attribute" : "teleport", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
+	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 7), "piece" : "golem", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 8), "piece" : "valkyrie", "node2d" : null, "number" : 2, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 0), "piece" : "archer", "node2d" : archer1Node, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "node2d" : null, "number" : 3, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "node2d" : null, "number" : 4, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "node2d" : null, "number" : 5, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "node2d" : null, "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "node2d" : null, "number" : 7, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "node2d" : archer2Node, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(2, 0), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 1), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 2), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 3), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 4), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 5), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 6), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 7), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 8), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 0), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 1), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 2), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 3), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 4), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 5), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 6), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 7), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 8), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 0), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 1), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 2), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 3), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 4), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 5), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 6), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 7), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 8), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 0), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 1), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 2), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 3), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 4), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 5), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 6), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 7), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 8), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 0), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 1), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 2), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 3), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 4), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 5), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 6), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 7), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 8), "piece" : null, "node2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null},
+	{"coordinates" : Vector2i(7, 0), "piece" : "manticore", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 8), "piece" : "manticore", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3},
+	{"coordinates" : Vector2i(8, 0), "piece" : "banshee", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 1), "piece" : "troll", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 2), "piece" : "basilisk", "node2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 3), "piece" : "shapeshifter", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
+	{"coordinates" : Vector2i(8, 4), "piece" : "sorceress", "node2d" : null, "number" : 1, "attribute" : "teleport", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 5), "piece" : "dragon", "node2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(8, 6), "piece" : "basilisk", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3},
+	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "node2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "node2d" : null, "number" : 2, "attribute" : "fly", "square_color" : "light", "movement_units" : 3}
 	]
 			
 func _process(_delta):
@@ -188,7 +187,8 @@ func movePiece():
 func calculateMovableSquares(inSquare):
 	var frontier = []
 	var came_from = {}
-	var start_location = tileMap.local_to_map(squares[0].get("coordinates"))	#Position in tilemap (Vector2)
+	var start_location = Vector2i(0, 0)
+	var squareToConsider = null
 	
 	frontier.push_front(start_location)
 	came_from[start_location] = null
@@ -196,15 +196,25 @@ func calculateMovableSquares(inSquare):
 	while !frontier.is_empty():
 		var current = frontier.pop_front()
 		for next in get_neighbors(current):
-			if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
-				var squareToConsider = current + inSquare.get("coordinates")
-				if !came_from.has(next):
-					frontier.push_back(next)
-					came_from[next] = current
-				
-				if squareToConsider.x <= GRID_DIM && squareToConsider.x >= 0:
-					if squareToConsider.y <= GRID_DIM && squareToConsider.y >= 0:
-						movableSquares[squareToConsider] = null	
+			if (inSquare.get("attribute") == "ground"):
+				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
+					squareToConsider = current + inSquare.get("coordinates")
+					if !came_from.has(next):
+						frontier.push_back(next)
+						came_from[next] = current
+					
+					set_movable_squares(squareToConsider)
+			
+			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
+				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
+					if absi(current.x) <= inSquare.get("movement_units"):
+						if absi(current.y) <= inSquare.get("movement_units"):
+							squareToConsider = current + inSquare.get("coordinates")
+							if !came_from.has(next):
+								frontier.push_back(next)
+								came_from[next] = current
+						
+							set_movable_squares(squareToConsider)
 						
 		for square in squares:
 			for movableSquare in movableSquares.keys():
@@ -221,3 +231,7 @@ func get_neighbors(node):
 	
 	return neighbors
 	
+func set_movable_squares(squareToConsider):
+	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
+		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
+			movableSquares[squareToConsider] = null	
