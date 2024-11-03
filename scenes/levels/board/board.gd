@@ -198,35 +198,35 @@ func movePiece():
 		
 func calculateMovableSquares(inSquare):
 	var frontier = []
-	var came_from = {}
-	var start_location = Vector2i(0, 0)
+	var cameFrom = {}
+	var startLocation = Vector2i(0, 0)
 	var squareToConsider = null
 	
-	frontier.push_front(start_location)
-	came_from[start_location] = null
+	frontier.push_front(startLocation)
+	cameFrom[startLocation] = null
 
 	while !frontier.is_empty():
 		var current = frontier.pop_front()
-		for next in get_neighbors(current):
+		for next in getNeighbors(current):
 			if (inSquare.get("attribute") == "ground"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
 					squareToConsider = current + inSquare.get("coordinates")
-					if !came_from.has(next):
+					if !cameFrom.has(next):
 						frontier.push_back(next)
-						came_from[next] = current
+						cameFrom[next] = current
 					
-					set_movable_squares(squareToConsider)
+					setMovableSquares(squareToConsider)
 			
 			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
 					if absi(current.x) <= inSquare.get("movement_units"):
 						if absi(current.y) <= inSquare.get("movement_units"):
 							squareToConsider = current + inSquare.get("coordinates")
-							if !came_from.has(next):
+							if !cameFrom.has(next):
 								frontier.push_back(next)
-								came_from[next] = current
+								cameFrom[next] = current
 						
-							set_movable_squares(squareToConsider)
+							setMovableSquares(squareToConsider)
 						
 		for square in squares:
 			for movableSquare in movableSquares.keys():
@@ -235,12 +235,12 @@ func calculateMovableSquares(inSquare):
 		
 	#print(movableSquares)
 	
-func set_movable_squares(squareToConsider):
+func setMovableSquares(squareToConsider):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
 			movableSquares[squareToConsider] = null	
 				
-func get_neighbors(node):
+func getNeighbors(node):
 	var neighbors = []
 	
 	neighbors.append(node + Vector2i(-1, 0))
