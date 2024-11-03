@@ -139,10 +139,9 @@ func _input(event):
 				elif pieceSelectionCount == 1:
 					if (tile != firstSelection):
 						if (currentPiece.get("piece") != null):
+							print("movePiece() called")
 							movePiece()
-					else:
-						pieceSelectionCount = 0
-					
+												
 func movePiece():
 	var newSquareIndex = 0
 	var oldSquareIndex = 0
@@ -180,6 +179,10 @@ func movePiece():
 	
 	squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
 	squares[oldSquareIndex]["node2d"] = null
+	squares[newSquareIndex]["number"] = squares[oldSquareIndex]["number"]
+	squares[oldSquareIndex]["number"] = null
+	squares[newSquareIndex]["attribute"] = squares[oldSquareIndex]["attribute"]
+	squares[oldSquareIndex]["attribute"] = null
 	squares[newSquareIndex]["sprite2d"] = squares[oldSquareIndex]["sprite2d"]
 	squares[oldSquareIndex]["sprite2d"] = null
 	squares[newSquareIndex]["piece"] = squares[oldSquareIndex]["piece"]
@@ -190,8 +193,8 @@ func movePiece():
 	pieceSelectionCount = 0
 	movableSquares = {}
 	
-	print("oldSquare = %s" % (oldSquare))
-	print("newSquare = %s" % (newSquare))
+	#print("oldSquare = %s" % (oldSquare))
+	#print("newSquare = %s" % (newSquare))
 		
 func calculateMovableSquares(inSquare):
 	var frontier = []
@@ -231,6 +234,11 @@ func calculateMovableSquares(inSquare):
 					movableSquares.erase(movableSquare)
 		
 	#print(movableSquares)
+	
+func set_movable_squares(squareToConsider):
+	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
+		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
+			movableSquares[squareToConsider] = null	
 				
 func get_neighbors(node):
 	var neighbors = []
@@ -241,8 +249,3 @@ func get_neighbors(node):
 	neighbors.append(node + Vector2i(0, 1))
 	
 	return neighbors
-	
-func set_movable_squares(squareToConsider):
-	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
-		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
-			movableSquares[squareToConsider] = null	
