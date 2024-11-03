@@ -113,6 +113,8 @@ func _process(_delta):
 
 	if tile.x >= OFFSET_VALUE && tile.x < (GRID_DIM + OFFSET_VALUE):
 		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
+			touchingGameTile = true
+
 			if pieceSelectionCount == 1:
 				if ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys() || 
 				((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) == currentPiece.get("coordinates"))):
@@ -121,7 +123,6 @@ func _process(_delta):
 					tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
 			else: 
 				tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
-			touchingGameTile = true
 				
 func _input(event):	
 	if event is InputEventMouseButton and event.pressed:
@@ -139,7 +140,6 @@ func _input(event):
 				elif pieceSelectionCount == 1:
 					if (tile != firstSelection):
 						if (currentPiece.get("piece") != null):
-							print("movePiece() called")
 							movePiece()
 												
 func movePiece():
