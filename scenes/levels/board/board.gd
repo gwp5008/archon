@@ -212,6 +212,7 @@ func calculateMovableSquares(inSquare):
 
 	while !frontier.is_empty():
 		var current = frontier.pop_front()
+		
 		for next in getNeighbors(current):
 			if (inSquare.get("attribute") == "ground"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
@@ -235,11 +236,31 @@ func calculateMovableSquares(inSquare):
 						
 		for square in squares:
 			for movableSquare in movableSquares.keys():
-				if square.get("coordinates") == movableSquare && square.get("piece") != null:
-					movableSquares.erase(movableSquare)
-		
+				if square.get("coordinates") == movableSquare:
+					if square.get("piece") != null:
+						movableSquares.erase(movableSquare)
+						
+		if (inSquare.get("attribute") == "ground"):
+			checkIfSquareIsBlocked(inSquare)
+
 	#print(movableSquares)
 	
+func checkIfSquareIsBlocked(inSquare):
+	var link = inSquare.get("coordinates")
+	
+	for squareToConsider in movableSquares:
+		if (squareToConsider != link):
+			if Vector2i(link.x + 1, link.y) in movableSquares:
+				link = Vector2i(link.x + 1, link.y)
+			elif Vector2i(link.x - 1, link.y) in movableSquares:
+				link = Vector2i(link.x + 1, link.y)
+			elif Vector2i(link.x, link.y + 1) in movableSquares:
+				link = Vector2i(link.x, link.y + 1)
+			elif Vector2i(link.x, link.y - 1) in movableSquares:
+				link = Vector2i(link.x, link.y - 1)
+			else:
+				movableSquares.erase(squareToConsider)
+					
 func setMovableSquares(squareToConsider):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
