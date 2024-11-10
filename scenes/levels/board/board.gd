@@ -253,7 +253,7 @@ func checkIfSquareIsBlocked(inSquare):
 			if Vector2i(link.x + 1, link.y) in movableSquares:
 				link = Vector2i(link.x + 1, link.y)
 			elif Vector2i(link.x - 1, link.y) in movableSquares:
-				link = Vector2i(link.x + 1, link.y)
+				link = Vector2i(link.x - 1, link.y)
 			elif Vector2i(link.x, link.y + 1) in movableSquares:
 				link = Vector2i(link.x, link.y + 1)
 			elif Vector2i(link.x, link.y - 1) in movableSquares:
