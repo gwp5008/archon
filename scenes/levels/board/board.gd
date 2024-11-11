@@ -177,29 +177,31 @@ func movePiece():
 					
 				oldSquareIndex += 1
 				
-	prevNewCoords = squares[newSquareIndex].get("coordinates")
-	prevOldCoords = squares[oldSquareIndex].get("coordinates")
-	prevNewColor = squares[newSquareIndex].get("square_color")
-	prevOldColor = squares[oldSquareIndex].get("square_color")
-	
-	squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
-	squares[oldSquareIndex]["node2d"] = null
-	squares[newSquareIndex]["number"] = squares[oldSquareIndex]["number"]
-	squares[oldSquareIndex]["number"] = null
-	squares[newSquareIndex]["attribute"] = squares[oldSquareIndex]["attribute"]
-	squares[oldSquareIndex]["attribute"] = null
-	squares[newSquareIndex]["sprite2d"] = squares[oldSquareIndex]["sprite2d"]
-	squares[oldSquareIndex]["sprite2d"] = null
-	squares[newSquareIndex]["piece"] = squares[oldSquareIndex]["piece"]
-	squares[oldSquareIndex]["piece"] = null
-	squares[newSquareIndex]["movement_units"] = squares[oldSquareIndex]["movement_units"]
-	squares[oldSquareIndex]["movement_units"] = null
+		prevNewCoords = squares[newSquareIndex].get("coordinates")
+		prevOldCoords = squares[oldSquareIndex].get("coordinates")
+		prevNewColor = squares[newSquareIndex].get("square_color")
+		prevOldColor = squares[oldSquareIndex].get("square_color")
+		
+		squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
+		squares[oldSquareIndex]["node2d"] = null
+		squares[newSquareIndex]["number"] = squares[oldSquareIndex]["number"]
+		squares[oldSquareIndex]["number"] = null
+		squares[newSquareIndex]["attribute"] = squares[oldSquareIndex]["attribute"]
+		squares[oldSquareIndex]["attribute"] = null
+		squares[newSquareIndex]["sprite2d"] = squares[oldSquareIndex]["sprite2d"]
+		squares[oldSquareIndex]["sprite2d"] = null
+		squares[newSquareIndex]["piece"] = squares[oldSquareIndex]["piece"]
+		squares[oldSquareIndex]["piece"] = null
+		squares[newSquareIndex]["movement_units"] = squares[oldSquareIndex]["movement_units"]
+		squares[oldSquareIndex]["movement_units"] = null
+		squares[newSquareIndex]["square_color"] = squares[oldSquareIndex]["square_color"]
+		squares[oldSquareIndex]["square_color"] = null
 
-	pieceSelectionCount = 0
-	movableSquares = {}
-	
-	#print("oldSquare = %s" % (oldSquare))
-	#print("newSquare = %s" % (newSquare))
+		pieceSelectionCount = 0
+		movableSquares = {}
+		
+		#print("oldSquare = %s" % (oldSquare))
+		#print("newSquare = %s" % (newSquare))
 		
 func calculateMovableSquares(inSquare):
 	var frontier = []
@@ -241,25 +243,50 @@ func calculateMovableSquares(inSquare):
 						movableSquares.erase(movableSquare)
 						
 		if (inSquare.get("attribute") == "ground"):
-			checkIfSquareIsBlocked(inSquare)
+			checkIfSquareIsBlocked(inSquare, 0)
 
 	#print(movableSquares)
 	
-func checkIfSquareIsBlocked(inSquare):
-	var link = inSquare.get("coordinates")
+func checkIfSquareIsBlocked(inSquare, numMovements):
+	if (Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates").y) in movableSquares.keys()):
+		numMovements += 1
+		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
+		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates").y), numMovements)
+	elif (Vector2i(inSquare.get("coordinates").x - 1, inSquare.get("coordinates").y) in movableSquares.keys()):
+		numMovements += 1
+		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
+		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x - 1, inSquare.get("coordinates").y), numMovements)
+	elif (Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y + 1) in movableSquares.keys()):
+		numMovements += 1
+		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
+		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y + 1), numMovements)
+	elif (Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y - 1) in movableSquares.keys()):
+		numMovements += 1
+		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
+		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y - 1), numMovements)
+		
+	print(numMovements)
+	if numMovements > inSquare.get("movement_units"):
+		print(true)
+		for movableSquare in movableSquares:
+			if movableSquares[movableSquare] != true:
+				movableSquares.erase(movableSquare)
+				print(movableSquare)
 	
-	for squareToConsider in movableSquares:
-		if (squareToConsider != link):
-			if Vector2i(link.x + 1, link.y) in movableSquares:
-				link = Vector2i(link.x + 1, link.y)
-			elif Vector2i(link.x - 1, link.y) in movableSquares:
-				link = Vector2i(link.x - 1, link.y)
-			elif Vector2i(link.x, link.y + 1) in movableSquares:
-				link = Vector2i(link.x, link.y + 1)
-			elif Vector2i(link.x, link.y - 1) in movableSquares:
-				link = Vector2i(link.x, link.y - 1)
-			else:
-				movableSquares.erase(squareToConsider)
+	#var link = inSquare.get("coordinates")
+	#
+	#for squareToConsider in movableSquares:
+		#if (squareToConsider != link):
+			#if (Vector2i(link.x + 1, link.y) in movableSquares):
+				#link = Vector2i(link.x + 1, link.y)
+			#elif Vector2i(link.x - 1, link.y) in movableSquares:
+				#link = Vector2i(link.x - 1, link.y)
+			#elif Vector2i(link.x, link.y + 1) in movableSquares:
+				#link = Vector2i(link.x, link.y + 1)
+			#elif Vector2i(link.x, link.y - 1) in movableSquares:
+				#link = Vector2i(link.x, link.y - 1)
+			#else:
+				#movableSquares.erase(squareToConsider)
 					
 func setMovableSquares(squareToConsider):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
