@@ -243,50 +243,47 @@ func calculateMovableSquares(inSquare):
 						movableSquares.erase(movableSquare)
 						
 		if (inSquare.get("attribute") == "ground"):
-			checkIfSquareIsBlocked(inSquare, 0)
+			checkIfSquareIsBlocked(inSquare.get("coordinates").x, inSquare.get("coordinates").y ,inSquare, 0)
 
 	#print(movableSquares)
 	
-func checkIfSquareIsBlocked(inSquare, numMovements):
-	if (Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates").y) in movableSquares.keys()):
-		numMovements += 1
-		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
-		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates").y), numMovements)
-	elif (Vector2i(inSquare.get("coordinates").x - 1, inSquare.get("coordinates").y) in movableSquares.keys()):
-		numMovements += 1
-		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
-		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x - 1, inSquare.get("coordinates").y), numMovements)
-	elif (Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y + 1) in movableSquares.keys()):
-		numMovements += 1
-		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
-		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y + 1), numMovements)
-	elif (Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y - 1) in movableSquares.keys()):
-		numMovements += 1
-		movableSquares[Vector2i(inSquare.get("coordinates").x + 1, inSquare.get("coordinates"))] = true
-		checkIfSquareIsBlocked(Vector2i(inSquare.get("coordinates").x, inSquare.get("coordinates").y - 1), numMovements)
-		
-	print(numMovements)
-	if numMovements > inSquare.get("movement_units"):
-		print(true)
-		for movableSquare in movableSquares:
-			if movableSquares[movableSquare] != true:
-				movableSquares.erase(movableSquare)
-				print(movableSquare)
-	
-	#var link = inSquare.get("coordinates")
+func checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements):
+	#print(inSquare.get("coordinates"))
+
+	#var inSquareX = inSquare.get("coordinates").x
+	#var inSquareY = inSquare.get("coordinates").y
 	#
-	#for squareToConsider in movableSquares:
-		#if (squareToConsider != link):
-			#if (Vector2i(link.x + 1, link.y) in movableSquares):
-				#link = Vector2i(link.x + 1, link.y)
-			#elif Vector2i(link.x - 1, link.y) in movableSquares:
-				#link = Vector2i(link.x - 1, link.y)
-			#elif Vector2i(link.x, link.y + 1) in movableSquares:
-				#link = Vector2i(link.x, link.y + 1)
-			#elif Vector2i(link.x, link.y - 1) in movableSquares:
-				#link = Vector2i(link.x, link.y - 1)
-			#else:
-				#movableSquares.erase(squareToConsider)
+	if (numMovements < inSquare.get("movement_units")):
+		if (Vector2i(inSquareX + 1, inSquareY) in movableSquares.keys()):
+			#print(Vector2i(inSquareX, inSquareY))
+			numMovements += 1
+			inSquareX += 1
+			#print("x + 1 = %s" % (Vector2i(inSquareX, inSquareY)))
+			movableSquares[Vector2i(inSquareX, inSquareY)] = true
+			#checkIfSquareIsBlocked(Vector2i(inSquareX + 1, inSquareY), numMovements)
+			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
+		elif (Vector2i(inSquareX, inSquareY + 1) in movableSquares.keys()):
+			numMovements += 1
+			inSquareY += 1
+			#print("y + 1 = %s" % (Vector2i(inSquareX, inSquareY)))
+			movableSquares[Vector2i(inSquareX, inSquareY)] = true
+			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
+		elif (Vector2i(inSquareX - 1, inSquareY) in movableSquares.keys()):
+			numMovements += 1
+			inSquareX -= 1
+			#print("x - 1 = %s" % (Vector2i(inSquareX, inSquareY)))
+			movableSquares[Vector2i(inSquareX, inSquareY)] = true
+			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
+		elif (Vector2i(inSquareX, inSquareY - 1) in movableSquares.keys()):
+			numMovements += 1
+			inSquareY -= 1
+			#print("y - 1 = %s" % (Vector2i(inSquareX, inSquareY)))
+			movableSquares[Vector2i(inSquareX, inSquareY)] = true
+			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
+		
+	for movableSquare in movableSquares:
+		if movableSquares[movableSquare] != true:
+			movableSquares.erase(movableSquare)
 					
 func setMovableSquares(squareToConsider):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
