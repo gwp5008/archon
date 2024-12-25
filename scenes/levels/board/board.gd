@@ -245,12 +245,13 @@ func calculateMovableSquares(inSquare):
 					connectingSquares.erase(movableSquare)
 		
 	if (inSquare.get("attribute") == "ground"):
+		paths = []
 		for movableSquare in movableSquares:
-			removeBlockedSquares(inSquare, connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
+			removeBlockedSquares(connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
 		print(paths)
 	#print(movableSquares.keys())
 	
-func removeBlockedSquares(inSquare, connectingSquares, start, end, path, visited, moves, movementUnits):
+func removeBlockedSquares(connectingSquares, start, end, path, visited, moves, movementUnits):
 	if start == end && moves < movementUnits:
 		path.push_back(end)
 		paths.push_back(path.duplicate())
@@ -275,7 +276,7 @@ func removeBlockedSquares(inSquare, connectingSquares, start, end, path, visited
 					#print("visited = %s" % visited)
 					#print("moves = %d" % moves)
 					#print("\n")
-					removeBlockedSquares(inSquare, connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
+					removeBlockedSquares(connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
 	
 	visited[start] = false
 	path.pop_back()
