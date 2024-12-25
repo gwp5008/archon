@@ -284,7 +284,7 @@ func removeBlockedSquares(connectingSquares, start, end, path, visited, moves, m
 func setMovableSquares(squareToConsider, inSquare):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
-			if(squareToConsider != inSquare.get("coordinates")):
+			if squareToConsider != inSquare.get("coordinates"):
 				movableSquares[squareToConsider] = null
 			connectingSquares[squareToConsider] = null
 				
