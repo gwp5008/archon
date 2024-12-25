@@ -8,6 +8,8 @@ var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
 var movableSquares = {}
+var connectingSquares = {}
+var paths = []
 var pieceSelectionCount = 0
 var currentPiece = null
 var firstSelection = null
@@ -159,8 +161,6 @@ func movePiece():
 	
 	if (touchingGameTile == true) && ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
-			#var tween = create_tween()
-			#tween.tween_property(currentPiece.get("sprite2d"), "modulate:a", 0, 0)
 			var movementSquares = currentPiece.get("node2d").move(tileMap, tile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
@@ -223,7 +223,7 @@ func calculateMovableSquares(inSquare):
 						frontier.push_back(next)
 						cameFrom[next] = current
 					
-					setMovableSquares(squareToConsider)
+					setMovableSquares(squareToConsider, inSquare)
 			
 			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
@@ -234,61 +234,58 @@ func calculateMovableSquares(inSquare):
 								frontier.push_back(next)
 								cameFrom[next] = current
 						
-							setMovableSquares(squareToConsider)
-						
-		for square in squares:
-			for movableSquare in movableSquares.keys():
-				if square.get("coordinates") == movableSquare:
-					if square.get("piece") != null:
-						movableSquares.erase(movableSquare)
-						
-		if (inSquare.get("attribute") == "ground"):
-			checkIfSquareIsBlocked(inSquare.get("coordinates").x, inSquare.get("coordinates").y ,inSquare, 0)
-
-	#print(movableSquares)
+							setMovableSquares(squareToConsider, inSquare)
 	
-func checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements):
-	#print(inSquare.get("coordinates"))
-
-	#var inSquareX = inSquare.get("coordinates").x
-	#var inSquareY = inSquare.get("coordinates").y
-	#
-	if (numMovements < inSquare.get("movement_units")):
-		if (Vector2i(inSquareX + 1, inSquareY) in movableSquares.keys()):
-			#print(Vector2i(inSquareX, inSquareY))
-			numMovements += 1
-			inSquareX += 1
-			#print("x + 1 = %s" % (Vector2i(inSquareX, inSquareY)))
-			movableSquares[Vector2i(inSquareX, inSquareY)] = true
-			#checkIfSquareIsBlocked(Vector2i(inSquareX + 1, inSquareY), numMovements)
-			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
-		elif (Vector2i(inSquareX, inSquareY + 1) in movableSquares.keys()):
-			numMovements += 1
-			inSquareY += 1
-			#print("y + 1 = %s" % (Vector2i(inSquareX, inSquareY)))
-			movableSquares[Vector2i(inSquareX, inSquareY)] = true
-			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
-		elif (Vector2i(inSquareX - 1, inSquareY) in movableSquares.keys()):
-			numMovements += 1
-			inSquareX -= 1
-			#print("x - 1 = %s" % (Vector2i(inSquareX, inSquareY)))
-			movableSquares[Vector2i(inSquareX, inSquareY)] = true
-			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
-		elif (Vector2i(inSquareX, inSquareY - 1) in movableSquares.keys()):
-			numMovements += 1
-			inSquareY -= 1
-			#print("y - 1 = %s" % (Vector2i(inSquareX, inSquareY)))
-			movableSquares[Vector2i(inSquareX, inSquareY)] = true
-			checkIfSquareIsBlocked(inSquareX, inSquareY, inSquare, numMovements)
+	for square in squares:
+		for movableSquare in movableSquares.keys():
+			if square.get("coordinates") == movableSquare:
+				if square.get("piece") != null:
+					movableSquares.erase(movableSquare)
+				else:
+					connectingSquares.erase(movableSquare)
 		
-	for movableSquare in movableSquares:
-		if movableSquares[movableSquare] != true:
-			movableSquares.erase(movableSquare)
-					
-func setMovableSquares(squareToConsider):
+	if (inSquare.get("attribute") == "ground"):
+		for movableSquare in movableSquares:
+			removeBlockedSquares(inSquare, connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
+		print(paths)
+	#print(movableSquares.keys())
+	
+func removeBlockedSquares(inSquare, connectingSquares, start, end, path, visited, moves, movementUnits):
+	if start == end && moves < movementUnits:
+		path.push_back(end)
+		paths.push_back(path.duplicate())
+		path.pop_back()
+		return
+	
+	path.push_back(start)
+	visited[start] = true
+	moves = path.size() - 1
+	var neighbors = getNeighbors(start)
+	for neighbor in neighbors:
+		if neighbor in connectingSquares.keys() || neighbor in movableSquares.keys():
+			if neighbor not in visited.keys() || visited[neighbor] == false:
+				if moves < movementUnits: 
+					#if neighbor == end:
+						#print("found path")
+						#print("neighbor = end")
+						#print("%v = %v" % [neighbor, end])
+					#print("neighbor = %v" % neighbor)
+					#print("path = ")
+					#print(path)
+					#print("visited = %s" % visited)
+					#print("moves = %d" % moves)
+					#print("\n")
+					removeBlockedSquares(inSquare, connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
+	
+	visited[start] = false
+	path.pop_back()
+		
+func setMovableSquares(squareToConsider, inSquare):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
-			movableSquares[squareToConsider] = null	
+			if(squareToConsider != inSquare.get("coordinates")):
+				movableSquares[squareToConsider] = null
+			connectingSquares[squareToConsider] = null
 				
 func getNeighbors(node):
 	var neighbors = []
