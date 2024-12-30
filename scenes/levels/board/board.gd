@@ -247,11 +247,21 @@ func calculateMovableSquares(inSquare):
 	if (inSquare.get("attribute") == "ground"):
 		paths = []
 		for movableSquare in movableSquares:
-			removeBlockedSquares(connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
-		print(paths)
+			getAllPaths(connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
+		checkBlockedGroundSquares(inSquare.get("movement_units"))
+		
+		for movableSquare in movableSquares.keys():
+			var pathFound = false
+			for path in paths:
+				if movableSquare in path:
+					pathFound = true
+			if pathFound == false:
+				movableSquares.erase(movableSquare)
+
+		#print(paths)
 	#print(movableSquares.keys())
 	
-func removeBlockedSquares(connectingSquares, start, end, path, visited, moves, movementUnits):
+func getAllPaths(connectingSquares, start, end, path, visited, moves, movementUnits):
 	if start == end && moves < movementUnits:
 		path.push_back(end)
 		paths.push_back(path.duplicate())
@@ -276,11 +286,51 @@ func removeBlockedSquares(connectingSquares, start, end, path, visited, moves, m
 					#print("visited = %s" % visited)
 					#print("moves = %d" % moves)
 					#print("\n")
-					removeBlockedSquares(connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
+					getAllPaths(connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
 	
 	visited[start] = false
 	path.pop_back()
-		
+	
+func checkBlockedGroundSquares(movementUnits):
+	var pathCounter = 0
+	var pathsCounter = 0
+	var checkedSquares = {}
+	var occupiedSquares = {}
+	var pathsDict = {}
+	
+	while pathsCounter < paths.size():
+		pathsDict[pathsCounter] = paths[pathsCounter]
+		pathCounter = 0
+		while pathCounter < paths[pathsCounter].size():
+			if paths[pathsCounter][pathCounter] not in checkedSquares.keys():
+				for square in squares:
+					if (pathCounter != 0 || pathCounter != paths[pathsCounter].size() - 1):
+						if paths[pathsCounter][pathCounter] == square.get("coordinates"):
+							if square.get("piece") != null:
+								checkedSquares[paths[pathsCounter][pathCounter]] = null
+								occupiedSquares[paths[pathsCounter][pathCounter]] = null
+			pathCounter += 1
+		pathsCounter += 1
+	
+	var squareIndex = 0
+	var squareIndices = {}
+	for occupiedSquare in occupiedSquares.keys():
+		for pathIndex in pathsDict.keys():
+			squareIndex = 0
+			while squareIndex < pathsDict.get(pathIndex).size():
+				if (squareIndex != 0 && squareIndex != pathsDict.get(pathIndex).size() - 1):
+					if pathsDict.get(pathIndex)[squareIndex] == occupiedSquare:
+						#squareIndices.append(pathIndex)
+						squareIndices[pathIndex] = null
+				squareIndex += 1
+				
+	for index in squareIndices.keys():
+		pathsDict.erase(index)
+	
+	paths = []
+	for path in pathsDict.keys():
+		paths.push_back(pathsDict[path])
+						
 func setMovableSquares(squareToConsider, inSquare):
 	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
