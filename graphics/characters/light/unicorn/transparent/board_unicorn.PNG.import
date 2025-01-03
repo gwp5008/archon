@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wj7cdw4iawly"
-path="res://.godot/imported/board_sprite.PNG-a27a0999bafea76d4ba7a9d0cbd66dbf.ctex"
+uid="uid://fwvhg8pagfko"
+path="res://.godot/imported/board_unicorn.PNG-291caa1a7ce8644cecb7d15d0f3c2878.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/characters/golem/transparent/board_sprite.PNG"
-dest_files=["res://.godot/imported/board_sprite.PNG-a27a0999bafea76d4ba7a9d0cbd66dbf.ctex"]
+source_file="res://graphics/characters/light/unicorn/transparent/board_unicorn.PNG"
+dest_files=["res://.godot/imported/board_unicorn.PNG-291caa1a7ce8644cecb7d15d0f3c2878.ctex"]
 
 [params]
 

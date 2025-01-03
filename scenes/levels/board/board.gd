@@ -14,7 +14,6 @@ var pieceSelectionCount = 0
 var currentPiece = null
 var firstSelection = null
 @onready var tileMap = $Layer0
-@onready var archerScene = preload("res://scenes/archer_movement.tscn")
 
 @onready var archer1Node = $Archer1Node
 @onready var archer2Node = $Archer2Node
@@ -22,25 +21,37 @@ var firstSelection = null
 @onready var valkyrie2Node = $Valkyrie2Node
 @onready var golem1Node = $Golem1Node
 @onready var golem2Node = $Golem2Node
+@onready var unicorn1Node = $Unicorn1Node
+@onready var unicorn2Node = $Unicorn2Node
+@onready var knight1Node = $Knight1Node
+@onready var knight2Node = $Knight2Node
+@onready var knight3Node = $Knight3Node
+@onready var knight4Node = $Knight4Node
+@onready var knight5Node = $Knight5Node
+@onready var knight6Node = $Knight6Node
+@onready var knight7Node = $Knight7Node
+@onready var djinnNode = $DjinnNode
+@onready var phoenixNode = $PhoenixNode
+@onready var wizardNode = $WizardNode
 
 @onready var squares = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "node2d" : valkyrie1Node, "sprite2d" : valkyrie1Node.get_node("Valkyrie1"), "number" : 1, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "node2d" : golem1Node, "sprite2d" : golem1Node.get_node("Golem1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "teleport", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
-	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "node2d" : null, "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "node2d" : unicorn1Node, "sprite2d" : unicorn1Node.get_node("Unicorn1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "node2d" : djinnNode, "sprite2d" : djinnNode.get_node("Djinn"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "node2d" : wizardNode, "sprite2d" : wizardNode.get_node("Wizard"), "number" : 1, "attribute" : "teleport", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "node2d" : phoenixNode, "sprite2d" : phoenixNode.get_node("Phoenix"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "movement_units" : 5}, 
+	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "node2d" : unicorn2Node, "sprite2d" : unicorn2Node.get_node("Unicorn2"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 4},
 	{"coordinates" : Vector2i(0, 7), "piece" : "golem", "node2d" : golem2Node, "sprite2d" : golem2Node.get_node("Golem2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(0, 8), "piece" : "valkyrie", "node2d" : valkyrie2Node, "sprite2d" : valkyrie2Node.get_node("Valkyrie2"), "number" : 2, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(1, 0), "piece" : "archer", "node2d" : archer1Node, "sprite2d" : archer1Node.get_node("Archer1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 3, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 4, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 5, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "node2d" : null, "sprite2d" : null, "number" : 7, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "node2d" : knight1Node, "sprite2d" : knight1Node.get_node("Knight1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "node2d" : knight2Node, "sprite2d" : knight2Node.get_node("Knight2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "node2d" : knight3Node, "sprite2d" : knight3Node.get_node("Knight3"), "number" : 3, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "node2d" : knight4Node, "sprite2d" : knight4Node.get_node("Knight4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "node2d" : knight5Node, "sprite2d" : knight5Node.get_node("Knight5"), "number" : 5, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "node2d" : knight6Node, "sprite2d" : knight6Node.get_node("Knight6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "node2d" : knight7Node, "sprite2d" : knight7Node.get_node("Knight7"), "number" : 7, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "node2d" : archer2Node, "sprite2d" : archer2Node.get_node("Archer2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(2, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "movement_units" : null}, 
 	{"coordinates" : Vector2i(2, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
@@ -320,7 +331,6 @@ func checkBlockedGroundSquares(movementUnits):
 			while squareIndex < pathsDict.get(pathIndex).size():
 				if (squareIndex != 0 && squareIndex != pathsDict.get(pathIndex).size() - 1):
 					if pathsDict.get(pathIndex)[squareIndex] == occupiedSquare:
-						#squareIndices.append(pathIndex)
 						squareIndices[pathIndex] = null
 				squareIndex += 1
 				

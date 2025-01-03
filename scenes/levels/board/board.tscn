@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bbyy2yjhnm4t2"]
+[gd_scene load_steps=33 format=3 uid="uid://bbyy2yjhnm4t2"]
 
 [ext_resource type="Texture2D" uid="uid://bqtjosngellvx" path="res://graphics/levels/board/game_board_modified.png" id="1_bj2u2"]
 [ext_resource type="Script" path="res://scenes/levels/board/board.gd" id="1_xb6gq"]
@@ -8,13 +8,23 @@
 [ext_resource type="Texture2D" uid="uid://bufym5dv63f6j" path="res://scenes/levels/board/good_move_selection.png" id="4_w1cdc"]
 [ext_resource type="Texture2D" uid="uid://cuvnf32pasn7a" path="res://graphics/levels/board/neutral_piece.png" id="5_aw2gp"]
 [ext_resource type="Texture2D" uid="uid://dyenqosr8elbf" path="res://scenes/levels/board/bad_move_selection.png" id="5_lqt13"]
-[ext_resource type="Texture2D" uid="uid://df0d7f53dkdsa" path="res://graphics/characters/archer/transparent/board_sprite.PNG" id="7_5tb8l"]
 [ext_resource type="Script" path="res://scenes/levels/board/pieces.gd" id="7_nss3o"]
 [ext_resource type="Script" path="res://scenes/levels/board/archer_node.gd" id="8_pm226"]
-[ext_resource type="Texture2D" uid="uid://dmo7dqwdjb14i" path="res://graphics/characters/valkyrie/transparent/board_sprite.PNG" id="12_fgvv8"]
+[ext_resource type="Texture2D" uid="uid://df0d7f53dkdsa" path="res://graphics/characters/light/archer/transparent/board_archer.PNG" id="11_eqsrb"]
 [ext_resource type="Script" path="res://scenes/levels/board/valkyrie_node.gd" id="12_rd6kl"]
+[ext_resource type="Texture2D" uid="uid://drlgtu57r2v6e" path="res://graphics/characters/light/valkyrie/transparent/board_valkyrie.PNG" id="13_sjj8e"]
 [ext_resource type="Script" path="res://scenes/levels/board/golem_node.gd" id="14_0il85"]
-[ext_resource type="Texture2D" uid="uid://wj7cdw4iawly" path="res://graphics/characters/golem/transparent/board_sprite.PNG" id="14_rq8ai"]
+[ext_resource type="Texture2D" uid="uid://wj7cdw4iawly" path="res://graphics/characters/light/golem/transparent/board_golem.PNG" id="15_sdmrq"]
+[ext_resource type="Script" path="res://scenes/levels/board/unicorn_node.gd" id="16_t2vb5"]
+[ext_resource type="Texture2D" uid="uid://fwvhg8pagfko" path="res://graphics/characters/light/unicorn/transparent/board_unicorn.PNG" id="17_ie1ni"]
+[ext_resource type="Script" path="res://scenes/levels/board/knight_node.gd" id="18_f3p86"]
+[ext_resource type="Texture2D" uid="uid://b1icnk2bpvrrr" path="res://graphics/characters/light/knight/knight_board.PNG" id="19_45trd"]
+[ext_resource type="Script" path="res://scenes/levels/board/djinn_node.gd" id="20_urvny"]
+[ext_resource type="Texture2D" uid="uid://bskxvefmkplor" path="res://graphics/characters/light/djinn/transparent/djinn_board.PNG" id="21_l4avn"]
+[ext_resource type="Script" path="res://scenes/levels/board/phoenix_node.gd" id="22_0b5o4"]
+[ext_resource type="Texture2D" uid="uid://cxmcqqhjhugpt" path="res://graphics/characters/light/phoenix/transparent/phoenix_board.PNG" id="22_yaa1s"]
+[ext_resource type="Script" path="res://scenes/levels/board/wizard_node.gd" id="24_lis0h"]
+[ext_resource type="Texture2D" uid="uid://bkmx02j8l3wlt" path="res://graphics/characters/light/wizard/transparent/wizard_board.PNG" id="25_cps2x"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
 texture = ExtResource("2_g7inr")
@@ -80,40 +90,124 @@ script = ExtResource("7_nss3o")
 script = ExtResource("8_pm226")
 
 [node name="Archer1" type="Sprite2D" parent="Archer1Node"]
-position = Vector2(287, 223)
-texture = ExtResource("7_5tb8l")
+position = Vector2(285, 223)
+texture = ExtResource("11_eqsrb")
 
 [node name="Archer2Node" type="Node2D" parent="."]
 script = ExtResource("8_pm226")
 
 [node name="Archer2" type="Sprite2D" parent="Archer2Node"]
-position = Vector2(287, 735)
-texture = ExtResource("7_5tb8l")
+position = Vector2(285, 735)
+texture = ExtResource("11_eqsrb")
 
 [node name="Valkyrie1Node" type="Node2D" parent="."]
 script = ExtResource("12_rd6kl")
 
 [node name="Valkyrie1" type="Sprite2D" parent="Valkyrie1Node"]
 position = Vector2(223, 223)
-texture = ExtResource("12_fgvv8")
+texture = ExtResource("13_sjj8e")
 
 [node name="Valkyrie2Node" type="Node2D" parent="."]
 script = ExtResource("12_rd6kl")
 
 [node name="Valkyrie2" type="Sprite2D" parent="Valkyrie2Node"]
 position = Vector2(223, 736)
-texture = ExtResource("12_fgvv8")
+texture = ExtResource("13_sjj8e")
 
 [node name="Golem1Node" type="Node2D" parent="."]
 script = ExtResource("14_0il85")
 
 [node name="Golem1" type="Sprite2D" parent="Golem1Node"]
 position = Vector2(223, 288)
-texture = ExtResource("14_rq8ai")
+texture = ExtResource("15_sdmrq")
 
 [node name="Golem2Node" type="Node2D" parent="."]
 script = ExtResource("14_0il85")
 
 [node name="Golem2" type="Sprite2D" parent="Golem2Node"]
 position = Vector2(223, 672)
-texture = ExtResource("14_rq8ai")
+texture = ExtResource("15_sdmrq")
+
+[node name="Unicorn1Node" type="Node2D" parent="."]
+script = ExtResource("16_t2vb5")
+
+[node name="Unicorn1" type="Sprite2D" parent="Unicorn1Node"]
+position = Vector2(224, 350)
+texture = ExtResource("17_ie1ni")
+
+[node name="Unicorn2Node" type="Node2D" parent="."]
+script = ExtResource("16_t2vb5")
+
+[node name="Unicorn2" type="Sprite2D" parent="Unicorn2Node"]
+position = Vector2(224, 606)
+texture = ExtResource("17_ie1ni")
+
+[node name="Knight1Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight1" type="Sprite2D" parent="Knight1Node"]
+position = Vector2(285, 288)
+texture = ExtResource("19_45trd")
+
+[node name="Knight2Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight2" type="Sprite2D" parent="Knight2Node"]
+position = Vector2(285, 352)
+texture = ExtResource("19_45trd")
+
+[node name="Knight3Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight3" type="Sprite2D" parent="Knight3Node"]
+position = Vector2(285, 416)
+texture = ExtResource("19_45trd")
+
+[node name="Knight4Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight4" type="Sprite2D" parent="Knight4Node"]
+position = Vector2(285, 480)
+texture = ExtResource("19_45trd")
+
+[node name="Knight5Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight5" type="Sprite2D" parent="Knight5Node"]
+position = Vector2(285, 544)
+texture = ExtResource("19_45trd")
+
+[node name="Knight6Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight6" type="Sprite2D" parent="Knight6Node"]
+position = Vector2(285, 608)
+texture = ExtResource("19_45trd")
+
+[node name="Knight7Node" type="Node2D" parent="."]
+script = ExtResource("18_f3p86")
+
+[node name="Knight7" type="Sprite2D" parent="Knight7Node"]
+position = Vector2(285, 672)
+texture = ExtResource("19_45trd")
+
+[node name="DjinnNode" type="Node2D" parent="."]
+script = ExtResource("20_urvny")
+
+[node name="Djinn" type="Sprite2D" parent="DjinnNode"]
+position = Vector2(224, 416)
+texture = ExtResource("21_l4avn")
+
+[node name="PhoenixNode" type="Node2D" parent="."]
+script = ExtResource("22_0b5o4")
+
+[node name="Phoenix" type="Sprite2D" parent="PhoenixNode"]
+position = Vector2(224, 541)
+texture = ExtResource("22_yaa1s")
+
+[node name="WizardNode" type="Node2D" parent="."]
+script = ExtResource("24_lis0h")
+
+[node name="Wizard" type="Sprite2D" parent="WizardNode"]
+position = Vector2(223, 480)
+texture = ExtResource("25_cps2x")

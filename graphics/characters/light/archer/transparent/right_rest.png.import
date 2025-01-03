@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8e7ysdtl66pb"
-path="res://.godot/imported/right_rest.png-07c266a1fae62feb5b259d4df9251bd3.ctex"
+path="res://.godot/imported/right_rest.png-e511552601b51611259afd02a4bc0ea4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/characters/archer/transparent/right_rest.png"
-dest_files=["res://.godot/imported/right_rest.png-07c266a1fae62feb5b259d4df9251bd3.ctex"]
+source_file="res://graphics/characters/light/archer/transparent/right_rest.png"
+dest_files=["res://.godot/imported/right_rest.png-e511552601b51611259afd02a4bc0ea4.ctex"]
 
 [params]
 
