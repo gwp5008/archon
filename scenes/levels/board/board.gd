@@ -7,6 +7,7 @@ const SQUARE_SIZE = 64
 var colorTurn = "light"
 var touchingGameTile = false
 var tile = Vector2i(0, 0)
+var adjustedTile = tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)
 var movableSquares = {}
 var connectingSquares = {}
 var paths = []
@@ -171,12 +172,10 @@ func clearMovement():
 func movePiece():
 	var newSquareIndex = 0
 	var oldSquareIndex = 0
-	var newSquare = {}
-	var oldSquare = {}
-	var prevNewColor = ""
-	var prevOldColor = ""
-	var prevNewCoords = null
-	var prevOldCoords = null
+	var _prevNewColor = ""
+	var _prevOldColor = ""
+	var _prevNewCoords = null
+	var _prevOldCoords = null
 		
 	if (touchingGameTile == true) && ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
@@ -184,22 +183,20 @@ func movePiece():
 			
 			for square in squares:
 				if (square.get("coordinates") == movementSquares.get("newPosition")):
-					newSquare = square
 					break
 					
 				newSquareIndex += 1
 
 			for square in squares:
 				if (square.get("coordinates") == movementSquares.get("oldPosition")):
-					oldSquare = square
 					break
 					
 				oldSquareIndex += 1
 				
-		prevNewCoords = squares[newSquareIndex].get("coordinates")
-		prevOldCoords = squares[oldSquareIndex].get("coordinates")
-		prevNewColor = squares[newSquareIndex].get("square_color")
-		prevOldColor = squares[oldSquareIndex].get("square_color")
+		_prevNewCoords = squares[newSquareIndex].get("coordinates")
+		_prevOldCoords = squares[oldSquareIndex].get("coordinates")
+		_prevNewColor = squares[newSquareIndex].get("square_color")
+		_prevOldColor = squares[oldSquareIndex].get("square_color")
 		
 		squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
 		squares[oldSquareIndex]["node2d"] = null
@@ -217,10 +214,7 @@ func movePiece():
 		squares[oldSquareIndex]["square_color"] = null
 
 		clearMovement()
-		
-		#print("oldSquare = %s" % (oldSquare))
-		#print("newSquare = %s" % (newSquare))
-		
+				
 func calculateMovableSquares(inSquare):
 	var frontier = []
 	var cameFrom = {}
@@ -266,7 +260,7 @@ func calculateMovableSquares(inSquare):
 		paths = []
 		for movableSquare in movableSquares:
 			getAllPaths(connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
-		checkBlockedGroundSquares(inSquare.get("movement_units"))
+		checkBlockedGroundSquares()
 		
 		for movableSquare in movableSquares.keys():
 			var pathFound = false
@@ -309,7 +303,7 @@ func getAllPaths(connectingSquares, start, end, path, visited, moves, movementUn
 	visited[start] = false
 	path.pop_back()
 	
-func checkBlockedGroundSquares(movementUnits):
+func checkBlockedGroundSquares():
 	var pathCounter = 0
 	var pathsCounter = 0
 	var checkedSquares = {}
