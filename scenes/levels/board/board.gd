@@ -259,7 +259,7 @@ func calculateMovableSquares(inSquare):
 	if (inSquare.get("attribute") == "ground"):
 		paths = []
 		for movableSquare in movableSquares:
-			getAllPaths(connectingSquares, inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
+			getAllPaths(inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
 		checkBlockedGroundSquares()
 		
 		for movableSquare in movableSquares.keys():
@@ -273,7 +273,7 @@ func calculateMovableSquares(inSquare):
 		#print(paths)
 	#print(movableSquares.keys())
 	
-func getAllPaths(connectingSquares, start, end, path, visited, moves, movementUnits):
+func getAllPaths(start, end, path, visited, moves, movementUnits):
 	if start == end && moves < movementUnits:
 		path.push_back(end)
 		paths.push_back(path.duplicate())
@@ -298,7 +298,7 @@ func getAllPaths(connectingSquares, start, end, path, visited, moves, movementUn
 					#print("visited = %s" % visited)
 					#print("moves = %d" % moves)
 					#print("\n")
-					getAllPaths(connectingSquares, neighbor, end, path, visited, moves, movementUnits)	
+					getAllPaths(neighbor, end, path, visited, moves, movementUnits)	
 	
 	visited[start] = false
 	path.pop_back()
