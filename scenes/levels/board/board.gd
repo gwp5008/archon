@@ -157,9 +157,17 @@ func _input(event):
 
 				elif pieceSelectionCount == 1:
 					if (tile != firstSelection):
+						if (tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE) not in movableSquares.keys()):
+							clearMovement()
 						if (currentPiece.get("piece") != null):
 							movePiece()
-												
+					else:
+						clearMovement()
+						
+func clearMovement():
+	pieceSelectionCount = 0
+	movableSquares = {}
+	
 func movePiece():
 	var newSquareIndex = 0
 	var oldSquareIndex = 0
@@ -169,7 +177,7 @@ func movePiece():
 	var prevOldColor = ""
 	var prevNewCoords = null
 	var prevOldCoords = null
-	
+		
 	if (touchingGameTile == true) && ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
 			var movementSquares = currentPiece.get("node2d").move(tileMap, tile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
@@ -208,8 +216,7 @@ func movePiece():
 		squares[newSquareIndex]["square_color"] = squares[oldSquareIndex]["square_color"]
 		squares[oldSquareIndex]["square_color"] = null
 
-		pieceSelectionCount = 0
-		movableSquares = {}
+		clearMovement()
 		
 		#print("oldSquare = %s" % (oldSquare))
 		#print("newSquare = %s" % (newSquare))
