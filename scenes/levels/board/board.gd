@@ -14,6 +14,7 @@ var paths = []
 var pieceSelectionCount = 0
 var currentPiece = null
 var firstSelection = null
+@onready var boardInfo = $BoardInfo
 @onready var tileMap = $Layer0
 
 @onready var archer1Node = $Archer1Node
@@ -153,6 +154,7 @@ func _input(event):
 							if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 								calculateMovableSquares(square)
 								currentPiece = square
+								displayMoveInfo()
 								pieceSelectionCount += 1
 								firstSelection = tile
 
@@ -164,6 +166,11 @@ func _input(event):
 							movePiece()
 					else:
 						clearMovement()
+					boardInfo.clear()
+						
+func displayMoveInfo():
+	boardInfo.set_text("")
+	boardInfo.set_text("%s (%s %d)" % [currentPiece.get("piece"), currentPiece.get("attribute"), currentPiece.get("movement_units")])
 						
 func clearMovement():
 	pieceSelectionCount = 0
