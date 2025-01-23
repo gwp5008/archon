@@ -36,6 +36,14 @@ var firstSelection = null
 @onready var phoenixNode = $PhoenixNode
 @onready var wizardNode = $WizardNode
 
+@onready var goblin1Node = $Goblin1Node
+@onready var goblin2Node = $Goblin2Node
+@onready var goblin3Node = $Goblin3Node
+@onready var goblin4Node = $Goblin4Node
+@onready var goblin5Node = $Goblin5Node
+@onready var goblin6Node = $Goblin6Node
+@onready var goblin7Node = $Goblin7Node
+
 @onready var squares = [
 	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "node2d" : valkyrie1Node, "sprite2d" : valkyrie1Node.get_node("Valkyrie1"), "number" : 1, "attribute" : "fly", "square_color" : "dark", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "node2d" : golem1Node, "sprite2d" : golem1Node.get_node("Golem1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
@@ -101,13 +109,13 @@ var firstSelection = null
 	{"coordinates" : Vector2i(6, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "movement_units" : null}, 
 	{"coordinates" : Vector2i(6, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "movement_units" : null},
 	{"coordinates" : Vector2i(7, 0), "piece" : "manticore", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "node2d" : goblin1Node, "sprite2d" : goblin1Node.get_node("Goblin1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "node2d" : goblin2Node, "sprite2d" : goblin2Node.get_node("Goblin2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "node2d" : goblin3Node, "sprite2d" : goblin3Node.get_node("Goblin3"), "number" : 3, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "node2d" : goblin4Node, "sprite2d" : goblin4Node.get_node("Goblin4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "node2d" : goblin5Node, "sprite2d" : goblin5Node.get_node("Goblin5"), "number" : 5, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "node2d" : goblin6Node, "sprite2d" : goblin6Node.get_node("Goblin6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "node2d" : goblin7Node, "sprite2d" : goblin7Node.get_node("Goblin7"), "number" : 7, "attribute" : "ground", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(7, 8), "piece" : "manticore", "node2d" : null, "sprite2d" : null, "number" : 2, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3},
 	{"coordinates" : Vector2i(8, 0), "piece" : "banshee", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "fly", "square_color" : "light", "movement_units" : 3}, 
 	{"coordinates" : Vector2i(8, 1), "piece" : "troll", "node2d" : null, "sprite2d" : null, "number" : 1, "attribute" : "ground", "square_color" : "dark", "movement_units" : 3}, 
@@ -170,6 +178,7 @@ func _input(event):
 						
 func displayMoveInfo():
 	boardInfo.set_text("")
+	boardInfo.add_theme_font_size_override("normal_font_size", 30)
 	boardInfo.set_text("%s (%s %d)" % [currentPiece.get("piece"), currentPiece.get("attribute"), currentPiece.get("movement_units")])
 						
 func clearMovement():

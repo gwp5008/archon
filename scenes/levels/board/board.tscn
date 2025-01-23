@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bbyy2yjhnm4t2"]
+[gd_scene load_steps=35 format=3 uid="uid://bbyy2yjhnm4t2"]
 
 [ext_resource type="Texture2D" uid="uid://bqtjosngellvx" path="res://graphics/levels/board/game_board_modified.png" id="1_bj2u2"]
 [ext_resource type="Script" path="res://scenes/levels/board/board.gd" id="1_xb6gq"]
@@ -18,13 +18,15 @@
 [ext_resource type="Script" path="res://scenes/levels/board/unicorn_node.gd" id="16_t2vb5"]
 [ext_resource type="Texture2D" uid="uid://fwvhg8pagfko" path="res://graphics/characters/light/unicorn/transparent/board_unicorn.PNG" id="17_ie1ni"]
 [ext_resource type="Script" path="res://scenes/levels/board/knight_node.gd" id="18_f3p86"]
-[ext_resource type="Texture2D" uid="uid://b1icnk2bpvrrr" path="res://graphics/characters/light/knight/knight_board.PNG" id="19_45trd"]
+[ext_resource type="Texture2D" uid="uid://b1icnk2bpvrrr" path="res://graphics/characters/light/knight/transparent/knight_board.PNG" id="19_vg66f"]
 [ext_resource type="Script" path="res://scenes/levels/board/djinn_node.gd" id="20_urvny"]
 [ext_resource type="Texture2D" uid="uid://bskxvefmkplor" path="res://graphics/characters/light/djinn/transparent/djinn_board.PNG" id="21_l4avn"]
 [ext_resource type="Script" path="res://scenes/levels/board/phoenix_node.gd" id="22_0b5o4"]
 [ext_resource type="Texture2D" uid="uid://cxmcqqhjhugpt" path="res://graphics/characters/light/phoenix/transparent/phoenix_board.PNG" id="22_yaa1s"]
 [ext_resource type="Script" path="res://scenes/levels/board/wizard_node.gd" id="24_lis0h"]
 [ext_resource type="Texture2D" uid="uid://bkmx02j8l3wlt" path="res://graphics/characters/light/wizard/transparent/wizard_board.PNG" id="25_cps2x"]
+[ext_resource type="Texture2D" uid="uid://b8orp1imbju3a" path="res://graphics/characters/dark/goblin/transparent/goblin_board.PNG" id="26_fdjui"]
+[ext_resource type="Script" path="res://scenes/levels/board/goblin_node.gd" id="26_q0u7f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
 texture = ExtResource("2_g7inr")
@@ -147,49 +149,49 @@ script = ExtResource("18_f3p86")
 
 [node name="Knight1" type="Sprite2D" parent="Knight1Node"]
 position = Vector2(285, 288)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight2Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight2" type="Sprite2D" parent="Knight2Node"]
 position = Vector2(285, 352)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight3Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight3" type="Sprite2D" parent="Knight3Node"]
 position = Vector2(285, 416)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight4Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight4" type="Sprite2D" parent="Knight4Node"]
 position = Vector2(285, 480)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight5Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight5" type="Sprite2D" parent="Knight5Node"]
 position = Vector2(285, 544)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight6Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight6" type="Sprite2D" parent="Knight6Node"]
 position = Vector2(285, 608)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="Knight7Node" type="Node2D" parent="."]
 script = ExtResource("18_f3p86")
 
 [node name="Knight7" type="Sprite2D" parent="Knight7Node"]
 position = Vector2(285, 672)
-texture = ExtResource("19_45trd")
+texture = ExtResource("19_vg66f")
 
 [node name="DjinnNode" type="Node2D" parent="."]
 script = ExtResource("20_urvny")
@@ -217,3 +219,52 @@ offset_left = 64.0
 offset_top = 834.0
 offset_right = 928.0
 offset_bottom = 896.0
+
+[node name="Goblin1Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin1" type="Sprite2D" parent="Goblin1Node"]
+position = Vector2(669, 288)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin2Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin2" type="Sprite2D" parent="Goblin2Node"]
+position = Vector2(669, 352)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin3Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin3" type="Sprite2D" parent="Goblin3Node"]
+position = Vector2(669, 416)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin4Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin4" type="Sprite2D" parent="Goblin4Node"]
+position = Vector2(669, 480)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin5Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin5" type="Sprite2D" parent="Goblin5Node"]
+position = Vector2(669, 544)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin6Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin6" type="Sprite2D" parent="Goblin6Node"]
+position = Vector2(669, 608)
+texture = ExtResource("26_fdjui")
+
+[node name="Goblin7Node" type="Node2D" parent="."]
+script = ExtResource("26_q0u7f")
+
+[node name="Goblin7" type="Sprite2D" parent="Goblin7Node"]
+position = Vector2(669, 672)
+texture = ExtResource("26_fdjui")
