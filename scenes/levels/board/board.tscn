@@ -344,7 +344,7 @@ texture = ExtResource("37_01ojv")
 script = ExtResource("38_ll8q5")
 
 [node name="Sorceress" type="Sprite2D" parent="SorceressNode"]
-position = Vector2(737, 479)
+position = Vector2(737, 480)
 texture = ExtResource("39_grttn")
 
 [node name="DragonNode" type="Node2D" parent="."]
