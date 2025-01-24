@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bbyy2yjhnm4t2"]
+[gd_scene load_steps=49 format=3 uid="uid://bbyy2yjhnm4t2"]
 
 [ext_resource type="Texture2D" uid="uid://bqtjosngellvx" path="res://graphics/levels/board/game_board_modified.png" id="1_bj2u2"]
 [ext_resource type="Script" path="res://scenes/levels/board/board.gd" id="1_xb6gq"]
@@ -27,6 +27,20 @@
 [ext_resource type="Texture2D" uid="uid://bkmx02j8l3wlt" path="res://graphics/characters/light/wizard/transparent/wizard_board.PNG" id="25_cps2x"]
 [ext_resource type="Texture2D" uid="uid://b8orp1imbju3a" path="res://graphics/characters/dark/goblin/transparent/goblin_board.PNG" id="26_fdjui"]
 [ext_resource type="Script" path="res://scenes/levels/board/goblin_node.gd" id="26_q0u7f"]
+[ext_resource type="Script" path="res://scenes/levels/board/manticore_node.gd" id="28_ah88n"]
+[ext_resource type="Texture2D" uid="uid://ceq7fvtx63xip" path="res://graphics/characters/dark/manticore/transparent/manticore_board.PNG" id="29_e3jap"]
+[ext_resource type="Script" path="res://scenes/levels/board/banshee_node.gd" id="30_vqylo"]
+[ext_resource type="Texture2D" uid="uid://5sjnohwgjd0h" path="res://graphics/characters/dark/banshee/transparent/banshee_board.PNG" id="31_gab3g"]
+[ext_resource type="Script" path="res://scenes/levels/board/troll_node.gd" id="32_lncoa"]
+[ext_resource type="Texture2D" uid="uid://bpntg2ovr6skc" path="res://graphics/characters/dark/troll/transparent/troll_board.PNG" id="33_c42he"]
+[ext_resource type="Script" path="res://scenes/levels/board/basilisk_node.gd" id="34_3tmjf"]
+[ext_resource type="Texture2D" uid="uid://1amswli1v4ap" path="res://graphics/characters/dark/basilisk/transparent/basilisk_board.PNG" id="35_xqork"]
+[ext_resource type="Script" path="res://scenes/levels/board/shapeshifter_node.gd" id="36_f4ust"]
+[ext_resource type="Texture2D" uid="uid://ch73j07si1s85" path="res://graphics/characters/dark/shapeshifter/transparent/shapeshifter_board.PNG" id="37_01ojv"]
+[ext_resource type="Script" path="res://scenes/levels/board/sorceress_node.gd" id="38_ll8q5"]
+[ext_resource type="Texture2D" uid="uid://bs0ryp4txqf2o" path="res://graphics/characters/dark/sorceress/transparent/sorceress_board.PNG" id="39_grttn"]
+[ext_resource type="Script" path="res://scenes/levels/board/dragon_node.gd" id="39_rg0h5"]
+[ext_resource type="Texture2D" uid="uid://boedq1roefuas" path="res://graphics/characters/dark/dragon/transparent/dragon_board.PNG" id="41_ujruf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ntcpo"]
 texture = ExtResource("2_g7inr")
@@ -214,12 +228,6 @@ script = ExtResource("24_lis0h")
 position = Vector2(223, 480)
 texture = ExtResource("25_cps2x")
 
-[node name="BoardInfo" type="RichTextLabel" parent="."]
-offset_left = 64.0
-offset_top = 834.0
-offset_right = 928.0
-offset_bottom = 896.0
-
 [node name="Goblin1Node" type="Node2D" parent="."]
 script = ExtResource("26_q0u7f")
 
@@ -268,3 +276,86 @@ script = ExtResource("26_q0u7f")
 [node name="Goblin7" type="Sprite2D" parent="Goblin7Node"]
 position = Vector2(669, 672)
 texture = ExtResource("26_fdjui")
+
+[node name="Manticore1Node" type="Node2D" parent="."]
+script = ExtResource("28_ah88n")
+
+[node name="Manticore1" type="Sprite2D" parent="Manticore1Node"]
+position = Vector2(673, 222)
+texture = ExtResource("29_e3jap")
+
+[node name="Manticore2Node" type="Node2D" parent="."]
+script = ExtResource("28_ah88n")
+
+[node name="Manticore2" type="Sprite2D" parent="Manticore2Node"]
+position = Vector2(673, 735)
+texture = ExtResource("29_e3jap")
+
+[node name="Banshee1Node" type="Node2D" parent="."]
+script = ExtResource("30_vqylo")
+
+[node name="Banshee1" type="Sprite2D" parent="Banshee1Node"]
+position = Vector2(734.5, 225)
+texture = ExtResource("31_gab3g")
+
+[node name="Banshee2Node" type="Node2D" parent="."]
+script = ExtResource("30_vqylo")
+
+[node name="Banshee2" type="Sprite2D" parent="Banshee2Node"]
+position = Vector2(734.5, 738)
+texture = ExtResource("31_gab3g")
+
+[node name="Troll1Node" type="Node2D" parent="."]
+script = ExtResource("32_lncoa")
+
+[node name="Troll1" type="Sprite2D" parent="Troll1Node"]
+position = Vector2(734, 287)
+texture = ExtResource("33_c42he")
+
+[node name="Troll2Node" type="Node2D" parent="."]
+script = ExtResource("32_lncoa")
+
+[node name="Troll2" type="Sprite2D" parent="Troll2Node"]
+position = Vector2(734, 671)
+texture = ExtResource("33_c42he")
+
+[node name="Basilisk1Node" type="Node2D" parent="."]
+script = ExtResource("34_3tmjf")
+
+[node name="Basilisk1" type="Sprite2D" parent="Basilisk1Node"]
+position = Vector2(735, 352)
+texture = ExtResource("35_xqork")
+
+[node name="Basilisk2Node" type="Node2D" parent="."]
+script = ExtResource("34_3tmjf")
+
+[node name="Basilisk2" type="Sprite2D" parent="Basilisk2Node"]
+position = Vector2(735, 608)
+texture = ExtResource("35_xqork")
+
+[node name="ShapeshifterNode" type="Node2D" parent="."]
+script = ExtResource("36_f4ust")
+
+[node name="Shapeshifter" type="Sprite2D" parent="ShapeshifterNode"]
+position = Vector2(738, 416)
+texture = ExtResource("37_01ojv")
+
+[node name="SorceressNode" type="Node2D" parent="."]
+script = ExtResource("38_ll8q5")
+
+[node name="Sorceress" type="Sprite2D" parent="SorceressNode"]
+position = Vector2(737, 479)
+texture = ExtResource("39_grttn")
+
+[node name="DragonNode" type="Node2D" parent="."]
+script = ExtResource("39_rg0h5")
+
+[node name="Dragon" type="Sprite2D" parent="DragonNode"]
+position = Vector2(734, 543)
+texture = ExtResource("41_ujruf")
+
+[node name="BoardInfo" type="RichTextLabel" parent="."]
+offset_left = 64.0
+offset_top = 834.0
+offset_right = 928.0
+offset_bottom = 896.0
