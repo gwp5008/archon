@@ -250,7 +250,7 @@ func movePiece():
 				
 func calculateMovableSquares(inSquare):
 	var frontier = []
-	var squaresToConsider = []
+	var squaresToConsider = {}
 	var cameFrom = {}
 	var startLocation = Vector2i(0, 0)
 	var squareToConsider = null
@@ -268,8 +268,6 @@ func calculateMovableSquares(inSquare):
 					if !cameFrom.has(next):
 						frontier.push_back(next)
 						cameFrom[next] = current
-					
-					squaresToConsider.append(squareToConsider)
 			
 			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
@@ -280,12 +278,12 @@ func calculateMovableSquares(inSquare):
 								frontier.push_back(next)
 								cameFrom[next] = current
 						
-							squaresToConsider.append(squareToConsider)
+			squaresToConsider[squareToConsider] = null
 							
 	setMovableSquares(squaresToConsider, inSquare)
 							
 func setMovableSquares(squaresToConsider, inSquare):
-	for squareToConsider in squaresToConsider:
+	for squareToConsider in squaresToConsider.keys():
 		if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
 			if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
 				if squareToConsider != inSquare.get("coordinates"):
