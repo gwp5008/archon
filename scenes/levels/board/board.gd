@@ -6,7 +6,7 @@ const SQUARE_SIZE = 64
 
 var colorTurn = "light"
 var touchingGameTile = false
-var tile = Vector2i(0, 0)
+var hoveredTile = Vector2i(0, 0)
 var movableSquares = {}
 var connectingSquares = {}
 var paths = []
@@ -139,8 +139,8 @@ var firstSelection = null
 	]
 			
 func _process(_delta):
-	tile = tileMap.local_to_map(get_global_mouse_position())
-	#print("tile = %s" % (tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
+	hoveredTile = tileMap.local_to_map(get_global_mouse_position())
+	#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
 	touchingGameTile = false
 	
 	for x in (GRID_DIM + OFFSET_VALUE):
@@ -149,18 +149,17 @@ func _process(_delta):
 				if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
 					tileMap.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 
-	if tile.x >= OFFSET_VALUE && tile.x < (GRID_DIM + OFFSET_VALUE):
-		if tile.y >= OFFSET_VALUE && tile.y < (GRID_DIM + OFFSET_VALUE):
+	if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
+		if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
 			touchingGameTile = true
 
 			if pieceSelectionCount == 1:
-				if ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys() || 
-				((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) == currentPiece.get("coordinates"))):
-					tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+				if ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):  
+					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
 				else:
-					tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
-			else: 
-				tileMap.set_cell((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
+					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
+			else:
+				tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 0, Vector2i(0, 0), 0)
 				
 func _input(event):	
 	if event is InputEventMouseButton and event.pressed:
@@ -169,22 +168,21 @@ func _input(event):
 				if pieceSelectionCount == 0:
 					for square in squares:
 						if (square.get("piece") != null):
-							if square.get("coordinates") == tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
+							if square.get("coordinates") == hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 								calculateMovableSquares(square)
 								currentPiece = square
 								displayMoveInfo()
 								pieceSelectionCount += 1
-								firstSelection = tile
+								firstSelection = hoveredTile
 
 				elif pieceSelectionCount == 1:
-					if (tile != firstSelection):
-						if (tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE) not in movableSquares.keys()):
-							clearMovement()
+					if (hoveredTile != firstSelection):
 						if (currentPiece.get("piece") != null):
 							movePiece()
-					else:
-						clearMovement()
+
+					clearMovement()
 					boardInfo.clear()
+					
 						
 func displayMoveInfo():
 	boardInfo.set_text("")
@@ -195,6 +193,11 @@ func clearMovement():
 	pieceSelectionCount = 0
 	movableSquares = {}
 	
+	#if colorTurn == "light":
+		#colorTurn = "dark"
+	#else:
+		#colorTurn = "light"
+	
 func movePiece():
 	var newSquareIndex = 0
 	var oldSquareIndex = 0
@@ -203,9 +206,9 @@ func movePiece():
 	var _prevNewCoords = null
 	var _prevOldCoords = null
 		
-	if (touchingGameTile == true) && ((tile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
+	if (touchingGameTile == true) && ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
-			var movementSquares = currentPiece.get("node2d").move(tileMap, tile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
+			var movementSquares = currentPiece.get("node2d").move(tileMap, hoveredTile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
 				if (square.get("coordinates") == movementSquares.get("newPosition")):
@@ -239,10 +242,15 @@ func movePiece():
 		squares[newSquareIndex]["square_color"] = squares[oldSquareIndex]["square_color"]
 		squares[oldSquareIndex]["square_color"] = null
 
-		clearMovement()
+		#clearMovement()
+	#if colorTurn == "light":
+		#colorTurn = "dark"
+	#else:
+		#colorTurn = "light"
 				
 func calculateMovableSquares(inSquare):
 	var frontier = []
+	var squaresToConsider = []
 	var cameFrom = {}
 	var startLocation = Vector2i(0, 0)
 	var squareToConsider = null
@@ -261,7 +269,7 @@ func calculateMovableSquares(inSquare):
 						frontier.push_back(next)
 						cameFrom[next] = current
 					
-					setMovableSquares(squareToConsider, inSquare)
+					squaresToConsider.append(squareToConsider)
 			
 			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
@@ -272,12 +280,23 @@ func calculateMovableSquares(inSquare):
 								frontier.push_back(next)
 								cameFrom[next] = current
 						
-							setMovableSquares(squareToConsider, inSquare)
-	
+							squaresToConsider.append(squareToConsider)
+							
+	setMovableSquares(squaresToConsider, inSquare)
+							
+func setMovableSquares(squaresToConsider, inSquare):
+	for squareToConsider in squaresToConsider:
+		if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
+			if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
+				if squareToConsider != inSquare.get("coordinates"):
+					movableSquares[squareToConsider] = null
+				connectingSquares[squareToConsider] = null
+			
 	for square in squares:
 		for movableSquare in movableSquares.keys():
 			if square.get("coordinates") == movableSquare:
 				if square.get("piece") != null:
+					#if square.get("color") == colorTurn:
 					movableSquares.erase(movableSquare)
 				else:
 					connectingSquares.erase(movableSquare)
@@ -295,9 +314,6 @@ func calculateMovableSquares(inSquare):
 					pathFound = true
 			if pathFound == false:
 				movableSquares.erase(movableSquare)
-
-		#print(paths)
-	#print(movableSquares.keys())
 	
 func getAllPaths(start, end, path, visited, moves, movementUnits):
 	if start == end && moves < movementUnits:
@@ -367,13 +383,6 @@ func checkBlockedGroundSquares():
 	paths = []
 	for path in pathsDict.keys():
 		paths.push_back(pathsDict[path])
-						
-func setMovableSquares(squareToConsider, inSquare):
-	if squareToConsider.x < GRID_DIM && squareToConsider.x >= 0:
-		if squareToConsider.y < GRID_DIM && squareToConsider.y >= 0:
-			if squareToConsider != inSquare.get("coordinates"):
-				movableSquares[squareToConsider] = null
-			connectingSquares[squareToConsider] = null
 				
 func getNeighbors(node):
 	var neighbors = []
