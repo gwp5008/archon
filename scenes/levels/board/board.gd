@@ -154,7 +154,7 @@ func _process(_delta):
 			touchingGameTile = true
 
 			if pieceSelectionCount == 1:
-				if ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):  
+				if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
 					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
 				else:
 					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
@@ -170,7 +170,7 @@ func _input(event):
 			if touchingGameTile == true:
 				if pieceSelectionCount == 0:
 					for square in squares:
-						if (square.get("piece") != null):
+						if square.get("piece") != null:
 							if square.get("coordinates") == hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE):
 								if square.get("piece_color") == colorTurn:
 									currentPiece = square
@@ -180,15 +180,13 @@ func _input(event):
 									firstSelection = hoveredTile
 
 				elif pieceSelectionCount == 1:
-					if (hoveredTile != firstSelection):
-						if (currentPiece.get("piece") != null):
-							movePiece()
-							changeTurn()
+					if hoveredTile != firstSelection:
+						movePiece()
+						changeTurn()
 
 					clearMovement()
 					boardInfo.clear()
 					
-						
 func displayMoveInfo():
 	boardInfo.set_text("")
 	boardInfo.add_theme_font_size_override("normal_font_size", 30)
@@ -217,13 +215,16 @@ func movePiece():
 			var movementSquares = currentPiece.get("node2d").move(tileMap, hoveredTile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
-				if (square.get("coordinates") == movementSquares.get("newPosition")):
+				if square.get("coordinates") == movementSquares.get("newPosition"):
+					if square.get("piece") != null:
+						square.get("sprite2d").set_z_index(0)
+						currentPiece.get("sprite2d").set_z_index(1)
 					break
 					
 				newSquareIndex += 1
 
 			for square in squares:
-				if (square.get("coordinates") == movementSquares.get("oldPosition")):
+				if square.get("coordinates") == movementSquares.get("oldPosition"):
 					break
 					
 				oldSquareIndex += 1
@@ -264,14 +265,14 @@ func calculateMovableSquares(inSquare):
 		var current = frontier.pop_front()
 		
 		for next in getNeighbors(current):
-			if (inSquare.get("attribute") == "ground"):
+			if inSquare.get("attribute") == "ground":
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units"):
 					squareToConsider = current + inSquare.get("coordinates")
 					if !cameFrom.has(next):
 						frontier.push_back(next)
 						cameFrom[next] = current
 			
-			elif (inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport"):
+			elif inSquare.get("attribute") == "fly" || inSquare.get("attribute") == "teleport":
 				if absi(current.x) + absi(current.y) <= inSquare.get("movement_units") * 2:
 					if absi(current.x) <= inSquare.get("movement_units"):
 						if absi(current.y) <= inSquare.get("movement_units"):
@@ -301,7 +302,7 @@ func setMovableSquares(squaresToConsider, inSquare):
 				else:
 					connectingSquares.erase(movableSquare)
 		
-	if (inSquare.get("attribute") == "ground"):
+	if inSquare.get("attribute") == "ground":
 		paths = []
 		for movableSquare in movableSquares:
 			getAllPaths(inSquare.get("coordinates"), movableSquare, [], {}, 0, inSquare.get("movement_units"))
