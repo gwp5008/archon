@@ -13,6 +13,7 @@ var paths = []
 var pieceSelectionCount = 0
 var currentPiece = null
 var firstSelection = null
+var pieceBlocked = false
 @onready var boardInfo = $BoardInfo
 @onready var tileMap = $Layer0
 
@@ -160,7 +161,7 @@ func _process(_delta):
 					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
 			else:
 				if colorTurn == "light":
-						tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
+					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
 				else:
 					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
 				
@@ -181,16 +182,19 @@ func _input(event):
 
 				elif pieceSelectionCount == 1:
 					if hoveredTile != firstSelection:
-						movePiece()
-						changeTurn()
+						attemptPieceMove()
 
 					clearMovement()
 					boardInfo.clear()
 					
 func displayMoveInfo():
 	boardInfo.set_text("")
-	boardInfo.add_theme_font_size_override("normal_font_size", 30)
-	boardInfo.set_text("%s (%s %d)" % [currentPiece.get("piece"), currentPiece.get("attribute"), currentPiece.get("movement_units")])
+	boardInfo.add_theme_font_size_override("normal_font_size", 20)
+	if pieceBlocked == true:
+		boardInfo.set_text("%s (%s %d)\nItem cannot be moved." % [currentPiece.get("piece"), currentPiece.get("attribute"), currentPiece.get("movement_units")])
+		pieceBlocked = false
+	else:
+		boardInfo.set_text("%s (%s %d)" % [currentPiece.get("piece"), currentPiece.get("attribute"), currentPiece.get("movement_units")])
 						
 func clearMovement():
 	pieceSelectionCount = 0
@@ -202,7 +206,7 @@ func changeTurn():
 	else:
 		colorTurn = "light"
 	
-func movePiece():
+func attemptPieceMove():
 	var newSquareIndex = 0
 	var oldSquareIndex = 0
 	var _prevNewColor = ""
@@ -250,6 +254,8 @@ func movePiece():
 		squares[oldSquareIndex]["square_color"] = null
 		squares[newSquareIndex]["piece_color"] = squares[oldSquareIndex]["piece_color"]
 		squares[oldSquareIndex]["piece_color"] = null
+		
+		changeTurn()
 				
 func calculateMovableSquares(inSquare):
 	var frontier = []
@@ -315,6 +321,9 @@ func setMovableSquares(squaresToConsider, inSquare):
 					pathFound = true
 			if pathFound == false:
 				movableSquares.erase(movableSquare)
+		
+		if movableSquares.size() == 0:
+			pieceBlocked = true
 					
 func getAllPaths(start, end, path, visited, moves, movementUnits):
 	if start == end && moves < movementUnits:
