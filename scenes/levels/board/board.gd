@@ -15,7 +15,7 @@ var currentPiece = null
 var firstSelection = null
 var pieceBlocked = false
 @onready var boardInfo = $BoardInfo
-@onready var tileMap = $Layer0
+@onready var tileMapLayer = $Layer0
 
 @onready var archer1Node = $Archer1Node
 @onready var archer2Node = $Archer2Node
@@ -140,7 +140,7 @@ var pieceBlocked = false
 	]
 			
 func _process(_delta):
-	hoveredTile = tileMap.local_to_map(get_global_mouse_position())
+	hoveredTile = tileMapLayer.local_to_map(get_global_mouse_position())
 	#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
 	touchingGameTile = false
 	
@@ -148,7 +148,7 @@ func _process(_delta):
 		for y in (GRID_DIM + OFFSET_VALUE):
 			if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
 				if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
-					tileMap.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
+					tileMapLayer.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 
 	if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
 		if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
@@ -156,14 +156,16 @@ func _process(_delta):
 
 			if pieceSelectionCount == 1:
 				if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
-					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
 				else:
-					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
+					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
 			else:
 				if colorTurn == "light":
-					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
+					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
 				else:
-					tileMap.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
+					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
+					
+			tileMapLayer.set_z_index(1)
 				
 func _input(event):	
 	if event is InputEventMouseButton and event.pressed:
@@ -203,8 +205,10 @@ func clearMovement():
 func changeTurn():
 	if colorTurn == "light":
 		colorTurn = "dark"
+		get_viewport().warp_mouse(Vector2((((GRID_DIM - 1) + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
 	else:
 		colorTurn = "light"
+		get_viewport().warp_mouse(Vector2(((0 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
 	
 func attemptPieceMove():
 	var newSquareIndex = 0
@@ -216,7 +220,7 @@ func attemptPieceMove():
 		
 	if (touchingGameTile == true) && ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
-			var movementSquares = currentPiece.get("node2d").move(tileMap, hoveredTile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
+			var movementSquares = currentPiece.get("node2d").move(tileMapLayer, hoveredTile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
 			
 			for square in squares:
 				if square.get("coordinates") == movementSquares.get("newPosition"):
