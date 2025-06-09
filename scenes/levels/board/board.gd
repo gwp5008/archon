@@ -3,6 +3,7 @@ extends Node2D
 const GRID_DIM = 9
 const OFFSET_VALUE = 3
 const SQUARE_SIZE = 64
+const NUM_SPELLS = 3
 
 var colorTurn = "light"
 var touchingGameTile = false
@@ -10,10 +11,14 @@ var hoveredTile = Vector2i(0, 0)
 var movableSquares = {}
 var connectingSquares = {}
 var paths = []
+var lightSpells = ["Heal", "Lock", "Cancel"]
+var darkSpells = ["Heal", "Lock", "Cancel"]
+var selectedSpell = ""
 var pieceSelectionCount = 0
 var currentPiece = null
 var firstSelection = null
 var pieceBlocked = false
+var selectingSpell = false
 @onready var boardInfo = $BoardInfo
 @onready var tileMapLayer = $Layer0
 
@@ -144,30 +149,31 @@ func _process(_delta):
 	#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
 	touchingGameTile = false
 	
-	for x in (GRID_DIM + OFFSET_VALUE):
-		for y in (GRID_DIM + OFFSET_VALUE):
-			if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
-				if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
-					tileMapLayer.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
+	if selectingSpell == false:
+		for x in (GRID_DIM + OFFSET_VALUE):
+			for y in (GRID_DIM + OFFSET_VALUE):
+				if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
+					if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
+						tileMapLayer.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 
-	if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
-		if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
-			touchingGameTile = true
+		if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
+			if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
+				touchingGameTile = true
 
-			if pieceSelectionCount == 1:
-				if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
-					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+				if pieceSelectionCount == 1:
+					if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
+						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+					else:
+						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
 				else:
-					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
-			else:
-				if colorTurn == "light":
-					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
-				else:
-					tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
-					
-			tileMapLayer.set_z_index(1)
+					if colorTurn == "light":
+						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
+					else:
+						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
+						
+				tileMapLayer.set_z_index(1)
 				
-func _input(event):	
+func _input(event):		
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if touchingGameTile == true:
@@ -182,12 +188,39 @@ func _input(event):
 									pieceSelectionCount += 1
 									firstSelection = hoveredTile
 
-				elif pieceSelectionCount == 1:
+				elif pieceSelectionCount >= 1:
 					if hoveredTile != firstSelection:
 						attemptPieceMove()
+						clearMovement()
+						boardInfo.clear()
 
-					clearMovement()
-					boardInfo.clear()
+					else:
+						if currentPiece.get("piece") == "wizard" || currentPiece.get("piece") == "sorceress":
+							displayPowers()
+						else:
+							clearMovement()
+							boardInfo.clear()
+
+					#clearMovement()
+					#boardInfo.clear()
+					
+	if selectingSpell == true:
+		var spellCounter = 0
+		if colorTurn == "light":
+			if Input.is_action_pressed("walk_left"):
+				selectedSpell = lightSpells[spellCounter % NUM_SPELLS]
+				spellCounter += 1
+		else:
+			if Input.is_action_pressed("walk_left"):
+				selectedSpell = darkSpells[spellCounter % NUM_SPELLS]
+				spellCounter += 1
+			
+func displayPowers():
+	#print("In displayBoardPowers function")
+	boardInfo.set_text("")
+	boardInfo.set_text("Select a spell.\n%s" % [selectedSpell])
+	
+	selectingSpell = true
 					
 func displayMoveInfo():
 	boardInfo.set_text("")
@@ -211,12 +244,9 @@ func changeTurn():
 		get_viewport().warp_mouse(Vector2(((0 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
 	
 func attemptPieceMove():
-	var newSquareIndex = 0
-	var oldSquareIndex = 0
-	var _prevNewColor = ""
-	var _prevOldColor = ""
-	var _prevNewCoords = null
-	var _prevOldCoords = null
+	var _newSquareIndex = 0
+	var _oldSquareIndex = 0
+	var moveSquareOccupied = false
 		
 	if (touchingGameTile == true) && ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
@@ -227,39 +257,66 @@ func attemptPieceMove():
 					if square.get("piece") != null:
 						square.get("sprite2d").set_z_index(0)
 						currentPiece.get("sprite2d").set_z_index(1)
+						moveSquareOccupied = true
 					break
 					
-				newSquareIndex += 1
+				_newSquareIndex += 1
 
 			for square in squares:
 				if square.get("coordinates") == movementSquares.get("oldPosition"):
 					break
 					
-				oldSquareIndex += 1
-				
-		_prevNewCoords = squares[newSquareIndex].get("coordinates")
-		_prevOldCoords = squares[oldSquareIndex].get("coordinates")
-		_prevNewColor = squares[newSquareIndex].get("square_color")
-		_prevOldColor = squares[oldSquareIndex].get("square_color")
+				_oldSquareIndex += 1
 		
-		squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
-		squares[oldSquareIndex]["node2d"] = null
-		squares[newSquareIndex]["number"] = squares[oldSquareIndex]["number"]
-		squares[oldSquareIndex]["number"] = null
-		squares[newSquareIndex]["attribute"] = squares[oldSquareIndex]["attribute"]
-		squares[oldSquareIndex]["attribute"] = null
-		squares[newSquareIndex]["sprite2d"] = squares[oldSquareIndex]["sprite2d"]
-		squares[oldSquareIndex]["sprite2d"] = null
-		squares[newSquareIndex]["piece"] = squares[oldSquareIndex]["piece"]
-		squares[oldSquareIndex]["piece"] = null
-		squares[newSquareIndex]["movement_units"] = squares[oldSquareIndex]["movement_units"]
-		squares[oldSquareIndex]["movement_units"] = null
-		squares[newSquareIndex]["square_color"] = squares[oldSquareIndex]["square_color"]
-		squares[oldSquareIndex]["square_color"] = null
-		squares[newSquareIndex]["piece_color"] = squares[oldSquareIndex]["piece_color"]
-		squares[oldSquareIndex]["piece_color"] = null
+		if moveSquareOccupied == true:
+			var movingPieceWon = piecesFight(_oldSquareIndex, _newSquareIndex)
+			
+			if movingPieceWon == true:
+				removeNode(_newSquareIndex)
+				moveCurrentPiece(_oldSquareIndex, _newSquareIndex)
+			else:
+				removeNode(_oldSquareIndex)
+		else:
+			moveCurrentPiece(_oldSquareIndex, _newSquareIndex)	
 		
+		#print("_newSquareIndex = ")
+		#print(squares[_newSquareIndex])
+		#print("_oldSquareIndex = ")
+		#print(squares[_oldSquareIndex])
+		#print("squares = ")
+		#print(squares)
 		changeTurn()
+		
+func piecesFight(_oldSquareIndex, _newSquareIndex):
+	#get_tree().paused = true
+	#get_tree().change_scene_to_file("res://scenes/archer_movement.tscn")
+	return true
+	
+func moveCurrentPiece(oldSquareIndex, newSquareIndex):
+	squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
+	squares[oldSquareIndex]["node2d"] = null
+	squares[newSquareIndex]["number"] = squares[oldSquareIndex]["number"]
+	squares[oldSquareIndex]["number"] = null
+	squares[newSquareIndex]["attribute"] = squares[oldSquareIndex]["attribute"]
+	squares[oldSquareIndex]["attribute"] = null
+	squares[newSquareIndex]["sprite2d"] = squares[oldSquareIndex]["sprite2d"]
+	squares[oldSquareIndex]["sprite2d"] = null
+	squares[newSquareIndex]["piece"] = squares[oldSquareIndex]["piece"]
+	squares[oldSquareIndex]["piece"] = null
+	squares[newSquareIndex]["movement_units"] = squares[oldSquareIndex]["movement_units"]
+	squares[oldSquareIndex]["movement_units"] = null
+	squares[newSquareIndex]["piece_color"] = squares[oldSquareIndex]["piece_color"]
+	squares[oldSquareIndex]["piece_color"] = null
+	
+func removeNode(squareIndex):
+	squares[squareIndex]["node2d"].queue_free()
+	squares[squareIndex]["node2d"] = null
+	squares[squareIndex]["number"] = null
+	squares[squareIndex]["attribute"] = null
+	squares[squareIndex]["sprite2d"] = null
+	squares[squareIndex]["piece"] = null
+	squares[squareIndex]["movement_units"] = null
+	squares[squareIndex]["piece_color"] = null
 				
 func calculateMovableSquares(inSquare):
 	var frontier = []
