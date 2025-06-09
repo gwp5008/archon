@@ -19,6 +19,7 @@ var currentPiece = null
 var firstSelection = null
 var pieceBlocked = false
 var selectingSpell = false
+var duelNeeded = false
 @onready var boardInfo = $BoardInfo
 @onready var tileMapLayer = $Layer0
 
@@ -145,33 +146,37 @@ var selectingSpell = false
 	]
 			
 func _process(_delta):
-	hoveredTile = tileMapLayer.local_to_map(get_global_mouse_position())
-	#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
-	touchingGameTile = false
-	
-	if selectingSpell == false:
-		for x in (GRID_DIM + OFFSET_VALUE):
-			for y in (GRID_DIM + OFFSET_VALUE):
-				if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
-					if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
-						tileMapLayer.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
+	if (duelNeeded == false):
+		hoveredTile = tileMapLayer.local_to_map(get_global_mouse_position())
+		#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
+		touchingGameTile = false
+		
+		if selectingSpell == false:
+			for x in (GRID_DIM + OFFSET_VALUE):
+				for y in (GRID_DIM + OFFSET_VALUE):
+					if x >= OFFSET_VALUE && x < (GRID_DIM + OFFSET_VALUE):
+						if y >= OFFSET_VALUE && y < (GRID_DIM + OFFSET_VALUE):
+							tileMapLayer.erase_cell(Vector2i(x, y) - Vector2i(OFFSET_VALUE, OFFSET_VALUE))
 
-		if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
-			if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
-				touchingGameTile = true
+			if hoveredTile.x >= OFFSET_VALUE && hoveredTile.x < (GRID_DIM + OFFSET_VALUE):
+				if hoveredTile.y >= OFFSET_VALUE && hoveredTile.y < (GRID_DIM + OFFSET_VALUE):
+					touchingGameTile = true
 
-				if pieceSelectionCount == 1:
-					if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
-						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+					if pieceSelectionCount == 1:
+						if (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys():  
+							tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 1, Vector2i(0, 0), 0)
+						else:
+							tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
 					else:
-						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 2, Vector2i(0, 0), 0)
-				else:
-					if colorTurn == "light":
-						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
-					else:
-						tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
-						
-				tileMapLayer.set_z_index(1)
+						if colorTurn == "light":
+							tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 3, Vector2i(0, 0), 0)
+						else:
+							tileMapLayer.set_cell((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)), 4, Vector2i(0, 0), 0)
+							
+					tileMapLayer.set_z_index(1)
+					
+	else:
+		get_tree().change_scene_to_file("res://scenes/archer_movement.tscn")
 				
 func _input(event):		
 	if event is InputEventMouseButton and event.pressed:
@@ -288,8 +293,7 @@ func attemptPieceMove():
 		changeTurn()
 		
 func piecesFight(_oldSquareIndex, _newSquareIndex):
-	#get_tree().paused = true
-	#get_tree().change_scene_to_file("res://scenes/archer_movement.tscn")
+	duelNeeded = true
 	return true
 	
 func moveCurrentPiece(oldSquareIndex, newSquareIndex):
