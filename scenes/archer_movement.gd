@@ -1,13 +1,19 @@
 extends CharacterBody2D
 
+var duelComplete = false
+#var boardData = BoardData.new()
 @onready var animations = $AnimationPlayer
 				
 func _physics_process(_delta):
-	velocity.x = Input.get_action_strength("walk_right") - Input.get_action_strength("walk_left")
-	velocity.y = Input.get_action_strength("walk_down") - Input.get_action_strength("walk_up")
-	velocity = velocity * 200
-	move_and_slide()
-	updateAnimation()
+	if duelComplete == false:
+		velocity.x = Input.get_action_strength("walk_right") - Input.get_action_strength("walk_left")
+		velocity.y = Input.get_action_strength("walk_down") - Input.get_action_strength("walk_up")
+		velocity = velocity * 200
+		move_and_slide()
+		updateAnimation()
+	else:
+		#print("changing back to board")
+		get_tree().change_scene_to_file("res://scenes/levels/board/board.tscn")
 	
 func updateAnimation():
 	if velocity.length() == 0:
@@ -25,4 +31,10 @@ func updateAnimation():
 	
 	if (direction != ""):
 		animations.play("walk_" + direction)
+		
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		duelComplete = true
+		#boardData.setDuelNeeded(false)
+		
 	

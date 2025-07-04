@@ -61,92 +61,98 @@ var duelNeeded = false
 @onready var goblin6Node = $Goblin6Node
 @onready var goblin7Node = $Goblin7Node
 
+#var saveFilePath = "user://save/"
+var saveFilePath = "res://saves/"
+var saveFileName = "BoardData.tres"
+var boardData = BoardData.new()
+var savedData = null
+
 @onready var squares = [
-	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "node2d" : valkyrie1Node, "sprite2d" : valkyrie1Node.get_node("Valkyrie1"), "number" : 1, "attribute" : "fly", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "node2d" : golem1Node, "sprite2d" : golem1Node.get_node("Golem1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "node2d" : unicorn1Node, "sprite2d" : unicorn1Node.get_node("Unicorn1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "node2d" : djinnNode, "sprite2d" : djinnNode.get_node("Djinn"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "node2d" : wizardNode, "sprite2d" : wizardNode.get_node("Wizard"), "number" : 1, "attribute" : "teleport", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "node2d" : phoenixNode, "sprite2d" : phoenixNode.get_node("Phoenix"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 5}, 
-	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "node2d" : unicorn2Node, "sprite2d" : unicorn2Node.get_node("Unicorn2"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 4},
-	{"coordinates" : Vector2i(0, 7), "piece" : "golem", "node2d" : golem2Node, "sprite2d" : golem2Node.get_node("Golem2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(0, 8), "piece" : "valkyrie", "node2d" : valkyrie2Node, "sprite2d" : valkyrie2Node.get_node("Valkyrie2"), "number" : 2, "attribute" : "fly", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 0), "piece" : "archer", "node2d" : archer1Node, "sprite2d" : archer1Node.get_node("Archer1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "node2d" : knight1Node, "sprite2d" : knight1Node.get_node("Knight1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "node2d" : knight2Node, "sprite2d" : knight2Node.get_node("Knight2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "node2d" : knight3Node, "sprite2d" : knight3Node.get_node("Knight3"), "number" : 3, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "node2d" : knight4Node, "sprite2d" : knight4Node.get_node("Knight4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "node2d" : knight5Node, "sprite2d" : knight5Node.get_node("Knight5"), "number" : 5, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "node2d" : knight6Node, "sprite2d" : knight6Node.get_node("Knight6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "node2d" : knight7Node, "sprite2d" : knight7Node.get_node("Knight7"), "number" : 7, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "node2d" : archer2Node, "sprite2d" : archer2Node.get_node("Archer2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(2, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 2), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 3), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 4), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 5), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 6), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(2, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 2), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 3), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 4), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 5), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 6), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(3, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 2), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 3), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 4), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 5), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 6), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(4, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 2), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 3), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 4), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 5), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 6), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(5, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 0), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 1), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 2), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 3), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 4), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 5), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 6), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 7), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
-	{"coordinates" : Vector2i(6, 8), "piece" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null},
-	{"coordinates" : Vector2i(7, 0), "piece" : "manticore", "node2d" : manticore1Node, "sprite2d" : manticore1Node.get_node("Manticore1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "node2d" : goblin1Node, "sprite2d" : goblin1Node.get_node("Goblin1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "node2d" : goblin2Node, "sprite2d" : goblin2Node.get_node("Goblin2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "node2d" : goblin3Node, "sprite2d" : goblin3Node.get_node("Goblin3"), "number" : 3, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "node2d" : goblin4Node, "sprite2d" : goblin4Node.get_node("Goblin4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "node2d" : goblin5Node, "sprite2d" : goblin5Node.get_node("Goblin5"), "number" : 5, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "node2d" : goblin6Node, "sprite2d" : goblin6Node.get_node("Goblin6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "node2d" : goblin7Node, "sprite2d" : goblin7Node.get_node("Goblin7"), "number" : 7, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(7, 8), "piece" : "manticore", "node2d" : manticore2Node, "sprite2d" : manticore2Node.get_node("Manticore2"), "number" : 2, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3},
-	{"coordinates" : Vector2i(8, 0), "piece" : "banshee", "node2d" : banshee1Node, "sprite2d" : banshee1Node.get_node("Banshee1"), "number" : 1, "attribute" : "fly", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 1), "piece" : "troll", "node2d" : troll1Node, "sprite2d" : troll1Node.get_node("Troll1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 2), "piece" : "basilisk", "node2d" : basilisk1Node, "sprite2d" : basilisk1Node.get_node("Basilisk1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 3), "piece" : "shapeshifter", "node2d" : shapeshifterNode, "sprite2d" : shapeshifterNode.get_node("Shapeshifter"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 5}, 
-	{"coordinates" : Vector2i(8, 4), "piece" : "sorceress", "node2d" : sorceressNode, "sprite2d" : sorceressNode.get_node("Sorceress"), "number" : 1, "attribute" : "teleport", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 5), "piece" : "dragon", "node2d" : dragonNode, "sprite2d" : dragonNode.get_node("Dragon"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 4}, 
-	{"coordinates" : Vector2i(8, 6), "piece" : "basilisk", "node2d" : basilisk2Node, "sprite2d" : basilisk2Node.get_node("Basilisk2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3},
-	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "node2d" : troll2Node, "sprite2d" : troll2Node.get_node("Troll2"), "number" : 2, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
-	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "node2d" : banshee2Node, "sprite2d" : banshee2Node.get_node("Banshee2"), "number" : 2, "attribute" : "fly", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}
+	{"coordinates" : Vector2i(0, 0), "piece" : "valkyrie", "is_alive" : true, "node2d" : valkyrie1Node, "sprite2d" : valkyrie1Node.get_node("Valkyrie1"), "number" : 1, "attribute" : "fly", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 1), "piece" : "golem", "is_alive" : true, "node2d" : golem1Node, "sprite2d" : golem1Node.get_node("Golem1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 2), "piece" : "unicorn", "is_alive" : true, "node2d" : unicorn1Node, "sprite2d" : unicorn1Node.get_node("Unicorn1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 3), "piece" : "djinn", "is_alive" : true, "node2d" : djinnNode, "sprite2d" : djinnNode.get_node("Djinn"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(0, 4), "piece" : "wizard", "is_alive" : true, "node2d" : wizardNode, "sprite2d" : wizardNode.get_node("Wizard"), "number" : 1, "attribute" : "teleport", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 5), "piece" : "phoenix", "is_alive" : true, "node2d" : phoenixNode, "sprite2d" : phoenixNode.get_node("Phoenix"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 5}, 
+	{"coordinates" : Vector2i(0, 6), "piece" : "unicorn", "is_alive" : true, "node2d" : unicorn2Node, "sprite2d" : unicorn2Node.get_node("Unicorn2"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 4},
+	{"coordinates" : Vector2i(0, 7), "piece" : "golem", "is_alive" : true, "node2d" : golem2Node, "sprite2d" : golem2Node.get_node("Golem2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(0, 8), "piece" : "valkyrie", "is_alive" : true, "node2d" : valkyrie2Node, "sprite2d" : valkyrie2Node.get_node("Valkyrie2"), "number" : 2, "attribute" : "fly", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 0), "piece" : "archer", "is_alive" : true, "node2d" : archer1Node, "sprite2d" : archer1Node.get_node("Archer1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 1), "piece" : "knight", "is_alive" : true, "node2d" : knight1Node, "sprite2d" : knight1Node.get_node("Knight1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 2), "piece" : "knight", "is_alive" : true, "node2d" : knight2Node, "sprite2d" : knight2Node.get_node("Knight2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 3), "piece" : "knight", "is_alive" : true, "node2d" : knight3Node, "sprite2d" : knight3Node.get_node("Knight3"), "number" : 3, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 4), "piece" : "knight", "is_alive" : true, "node2d" : knight4Node, "sprite2d" : knight4Node.get_node("Knight4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 5), "piece" : "knight", "is_alive" : true, "node2d" : knight5Node, "sprite2d" : knight5Node.get_node("Knight5"), "number" : 5, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 6), "piece" : "knight", "is_alive" : true, "node2d" : knight6Node, "sprite2d" : knight6Node.get_node("Knight6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 7), "piece" : "knight", "is_alive" : true, "node2d" : knight7Node, "sprite2d" : knight7Node.get_node("Knight7"), "number" : 7, "attribute" : "ground", "square_color" : "dark", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(1, 8), "piece" : "archer", "is_alive" : true, "node2d" : archer2Node, "sprite2d" : archer2Node.get_node("Archer2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "light", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(2, 0), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 1), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 2), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 3), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 4), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 5), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 6), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 7), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(2, 8), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 0), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 1), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 2), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 3), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 4), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 5), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 6), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 7), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(3, 8), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 0), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 1), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 2), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 3), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 4), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 5), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 6), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 7), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(4, 8), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 0), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 1), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 2), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 3), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 4), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 5), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 6), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 7), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(5, 8), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 0), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 1), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 2), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 3), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 4), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 5), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 6), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "dark", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 7), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "neutral", "piece_color" : null, "movement_units" : null}, 
+	{"coordinates" : Vector2i(6, 8), "piece" : null, "is_alive" : null, "node2d" : null, "sprite2d" : null, "number" : null, "attribute" : null, "square_color" : "light", "piece_color" : null, "movement_units" : null},
+	{"coordinates" : Vector2i(7, 0), "piece" : "manticore", "is_alive" : true, "node2d" : manticore1Node, "sprite2d" : manticore1Node.get_node("Manticore1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 1), "piece" : "goblin", "is_alive" : true, "node2d" : goblin1Node, "sprite2d" : goblin1Node.get_node("Goblin1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 2), "piece" : "goblin", "is_alive" : true, "node2d" : goblin2Node, "sprite2d" : goblin2Node.get_node("Goblin2"), "number" : 2, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 3), "piece" : "goblin", "is_alive" : true, "node2d" : goblin3Node, "sprite2d" : goblin3Node.get_node("Goblin3"), "number" : 3, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 4), "piece" : "goblin", "is_alive" : true, "node2d" : goblin4Node, "sprite2d" : goblin4Node.get_node("Goblin4"), "number" : 4, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 5), "piece" : "goblin", "is_alive" : true, "node2d" : goblin5Node, "sprite2d" : goblin5Node.get_node("Goblin5"), "number" : 5, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 6), "piece" : "goblin", "is_alive" : true, "node2d" : goblin6Node, "sprite2d" : goblin6Node.get_node("Goblin6"), "number" : 6, "attribute" : "ground", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 7), "piece" : "goblin", "is_alive" : true, "node2d" : goblin7Node, "sprite2d" : goblin7Node.get_node("Goblin7"), "number" : 7, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(7, 8), "piece" : "manticore", "is_alive" : true, "node2d" : manticore2Node, "sprite2d" : manticore2Node.get_node("Manticore2"), "number" : 2, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3},
+	{"coordinates" : Vector2i(8, 0), "piece" : "banshee", "is_alive" : true, "node2d" : banshee1Node, "sprite2d" : banshee1Node.get_node("Banshee1"), "number" : 1, "attribute" : "fly", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 1), "piece" : "troll", "is_alive" : true, "node2d" : troll1Node, "sprite2d" : troll1Node.get_node("Troll1"), "number" : 1, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 2), "piece" : "basilisk", "is_alive" : true, "node2d" : basilisk1Node, "sprite2d" : basilisk1Node.get_node("Basilisk1"), "number" : 1, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 3), "piece" : "shapeshifter", "is_alive" : true, "node2d" : shapeshifterNode, "sprite2d" : shapeshifterNode.get_node("Shapeshifter"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 5}, 
+	{"coordinates" : Vector2i(8, 4), "piece" : "sorceress", "is_alive" : true, "node2d" : sorceressNode, "sprite2d" : sorceressNode.get_node("Sorceress"), "number" : 1, "attribute" : "teleport", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 5), "piece" : "dragon", "is_alive" : true, "node2d" : dragonNode, "sprite2d" : dragonNode.get_node("Dragon"), "number" : 1, "attribute" : "fly", "square_color" : "neutral", "piece_color" : "dark", "movement_units" : 4}, 
+	{"coordinates" : Vector2i(8, 6), "piece" : "basilisk", "is_alive" : true, "node2d" : basilisk2Node, "sprite2d" : basilisk2Node.get_node("Basilisk2"), "number" : 2, "attribute" : "ground", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3},
+	{"coordinates" : Vector2i(8, 7), "piece" : "troll", "is_alive" : true, "node2d" : troll2Node, "sprite2d" : troll2Node.get_node("Troll2"), "number" : 2, "attribute" : "ground", "square_color" : "dark", "piece_color" : "dark", "movement_units" : 3}, 
+	{"coordinates" : Vector2i(8, 8), "piece" : "banshee", "is_alive" : true, "node2d" : banshee2Node, "sprite2d" : banshee2Node.get_node("Banshee2"), "number" : 2, "attribute" : "fly", "square_color" : "light", "piece_color" : "dark", "movement_units" : 3}
 	]
 			
 func _process(_delta):
-	if (duelNeeded == false):
+	if duelNeeded == false:		
 		hoveredTile = tileMapLayer.local_to_map(get_global_mouse_position())
 		#print("hoveredTile = %s" % (hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)))
 		touchingGameTile = false
@@ -178,6 +184,61 @@ func _process(_delta):
 	else:
 		get_tree().change_scene_to_file("res://scenes/archer_movement.tscn")
 				
+func _ready():
+	duelNeeded = false
+	verifySaveDirectory(saveFilePath)
+	var fileExists = FileAccess.file_exists(saveFilePath + saveFileName)
+	
+	if fileExists:
+		savedData = ResourceLoader.load(saveFilePath + saveFileName).duplicate(true)
+		loadBoardData()
+		boardData.negateStartup()
+		
+		var i = 0
+		var j = 0
+		while i < squares.size():
+			if savedData.originalSquares[i].get("piece") != null && savedData.boardData[i].get("piece") == null:
+				while j < savedData.boardData.size():
+					#print("i = %d" % [i])
+					#print("j = %d" % [j])
+					#print("savedData.originalSquares[i] = %s%d" % [savedData.originalSquares[i].get("piece"), savedData.originalSquares[i].get("number")])
+					#print("savedData.boardData[j] = %s%d" % [savedData.boardData[j].get("piece"), savedData.boardData[j].get("number")])
+					#print("\n")
+					if savedData.originalSquares[i].get("piece") == savedData.boardData[j].get("piece"):
+						if savedData.originalSquares[i].get("number") == savedData.boardData[j].get("number"):
+							squares[i].get("node2d").move(tileMapLayer, savedData.boardData[j].get("coordinates") + Vector2i(OFFSET_VALUE, OFFSET_VALUE), OFFSET_VALUE, savedData.originalSquares[i], SQUARE_SIZE)
+							moveCurrentPiece(i, j)
+							#removeNode(_newSquareIndex)
+							#print("moveCurrentPiece called on i = %d and j = %d" % [i, j])
+							break
+					j += 1
+			i += 1
+	else:
+		boardData.setOriginalSquares(squares.duplicate(true))
+		print("setOriginalSquares called")
+		
+#func attemptPieceMoveAuto(destinationTile, pieceToMove, squareIndex):
+	#var movementSquares = pieceToMove.get("node2d").move(tileMapLayer, destinationTile, OFFSET_VALUE, pieceToMove, SQUARE_SIZE)
+	#print(movementSquares)
+	
+func verifySaveDirectory(path: String):
+	DirAccess.make_dir_absolute(path)
+	
+func loadBoardData():
+	#var savedData = ResourceLoader.load(saveFilePath + saveFileName).duplicate(false)
+	boardData.setCurrentBoardData(savedData.boardData)
+	
+func saveBoardData():
+	#boardData.setCurrentBoardData(squares)
+	ResourceSaver.save(boardData, saveFilePath + saveFileName)
+	
+func piecesFight(_oldSquareIndex, _newSquareIndex):
+	duelNeeded = true
+	boardData.setCurrentBoardData(squares)
+	#print(boardData.originalSquares)
+	saveBoardData()
+	return true
+
 func _input(event):		
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -195,7 +256,8 @@ func _input(event):
 
 				elif pieceSelectionCount >= 1:
 					if hoveredTile != firstSelection:
-						attemptPieceMove()
+						attemptPieceMoveManual()
+						#attemptPieceMoveManual(hoveredTile, currentPiece)
 						clearMovement()
 						boardInfo.clear()
 
@@ -221,7 +283,6 @@ func _input(event):
 				spellCounter += 1
 			
 func displayPowers():
-	#print("In displayBoardPowers function")
 	boardInfo.set_text("")
 	boardInfo.set_text("Select a spell.\n%s" % [selectedSpell])
 	
@@ -246,17 +307,16 @@ func changeTurn():
 		get_viewport().warp_mouse(Vector2((((GRID_DIM - 1) + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
 	else:
 		colorTurn = "light"
-		get_viewport().warp_mouse(Vector2(((0 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
+		get_viewport().warp_mouse(Vector2((OFFSET_VALUE * SQUARE_SIZE + (SQUARE_SIZE / 2.0)), ((4 + OFFSET_VALUE) * SQUARE_SIZE + (SQUARE_SIZE / 2.0))))
 	
-func attemptPieceMove():
+func attemptPieceMoveManual():
 	var _newSquareIndex = 0
 	var _oldSquareIndex = 0
 	var moveSquareOccupied = false
-		
+			
 	if (touchingGameTile == true) && ((hoveredTile - Vector2i(OFFSET_VALUE, OFFSET_VALUE)) in movableSquares.keys()):
 		if pieceSelectionCount == 1:
 			var movementSquares = currentPiece.get("node2d").move(tileMapLayer, hoveredTile, OFFSET_VALUE, currentPiece, SQUARE_SIZE)
-			
 			for square in squares:
 				if square.get("coordinates") == movementSquares.get("newPosition"):
 					if square.get("piece") != null:
@@ -275,6 +335,7 @@ func attemptPieceMove():
 		
 		if moveSquareOccupied == true:
 			var movingPieceWon = piecesFight(_oldSquareIndex, _newSquareIndex)
+			#print("piecesFight called")
 			
 			if movingPieceWon == true:
 				removeNode(_newSquareIndex)
@@ -292,10 +353,10 @@ func attemptPieceMove():
 		#print(squares)
 		changeTurn()
 		
-func piecesFight(_oldSquareIndex, _newSquareIndex):
-	duelNeeded = true
-	return true
-	
+func attemptPieceMoveAuto(destinationTile, pieceToMove):
+	var movementSquares = pieceToMove.get("node2d").move(tileMapLayer, destinationTile, OFFSET_VALUE, pieceToMove, SQUARE_SIZE)
+	print(movementSquares)
+		
 func moveCurrentPiece(oldSquareIndex, newSquareIndex):
 	squares[newSquareIndex]["node2d"] = squares[oldSquareIndex]["node2d"]
 	squares[oldSquareIndex]["node2d"] = null

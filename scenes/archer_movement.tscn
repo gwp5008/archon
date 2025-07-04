@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bldn63kw7c4dd"]
 
 [ext_resource type="Script" path="res://scenes/archer_movement.gd" id="1_xsv8n"]
-[ext_resource type="Texture2D" uid="uid://c5v8f45s36e8a" path="res://graphics/characters/archer/transparent/transparent_archer_redo.png" id="2_vshmp"]
+[ext_resource type="Texture2D" uid="uid://c5v8f45s36e8a" path="res://graphics/characters/light/archer/transparent/transparent_archer_redo.png" id="2_vshmp"]
 
 [sub_resource type="Animation" id="Animation_cmbvm"]
 length = 0.001
